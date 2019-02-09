@@ -1,43 +1,49 @@
 package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
-import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.service.AccountService;
-import spark.ResponseTransformer;
 import spark.Spark;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class AccountController {
+public class AccountController extends GenericController{
 
-    AccountService accountService;
+    private static final String PATH = "/account";
 
     @Inject
     public AccountController(AccountService accountService) {
-        this.accountService = accountService;
+        super();
 
-        Spark.get("/account", (req, res) -> accountService.getAccounts(), json());
+        Spark.post(PATH, (request, response) -> {
+            response.type("application/json");
 
-        Spark.get("/account/:id", (req, res) -> accountService.getAccountById(Long.parseLong(req.params(":id"))), json());
+            Account account = new Gson().fromJson(request.body(), Account.class);
+            Account accountCreated = accountService.createAccount(account);
+            if (accountCreated != null){
+                response.status(201);
+                return accountCreated;
+            } else {
+                response.status(405);
+                return "Error creating Account";
+            }
+        }, json());
 
-        Spark.after((req, res) -> {
-            res.type("application/json");
-        });
+        Spark.get(PATH, (request, response) -> accountService.getAccounts(), json());
 
-        Spark.exception(IllegalArgumentException.class, (error, req, res) -> {
-            res.status(500);
-            res.body(toJson(new ResponseError(error)));
-        });
+        Spark.get(PATH + "/:id", (request, response) ->
+        {
+            Account accountById = accountService.getAccountById(Long.parseLong(request.params(":id")));
+            if (accountById != null){
+                return accountById;
+            } else {
+                response.status(404);
+                return "Account not found";
+            }
+        }, json());
     }
 
-    private static String toJson(Object object) {
-        return new Gson().toJson(object);
-    }
 
-    private ResponseTransformer json() {
-        return AccountController::toJson;
-    }
 }

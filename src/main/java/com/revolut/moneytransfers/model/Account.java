@@ -6,6 +6,7 @@ public class Account {
     Long id;
     private String owner;
     private BigDecimal balance;
+    private BigDecimal pendingTransfer;
     private Currency currency;
 
     public Long getId() {
@@ -38,5 +39,24 @@ public class Account {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public BigDecimal getPendingTransfer() {
+        return pendingTransfer;
+    }
+
+    public void setPendingTransfer(BigDecimal pendingTransfer) {
+        this.pendingTransfer = pendingTransfer;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", owner='" + owner + '\'' +
+                ", balance=" + balance +
+                ", pendingTransfer=" + pendingTransfer +
+                ", currency=" + currency +
+                '}';
     }
 }
