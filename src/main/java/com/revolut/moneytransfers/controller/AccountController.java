@@ -1,6 +1,7 @@
 package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
+import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.service.AccountService;
 import spark.Spark;
@@ -11,13 +12,11 @@ import javax.inject.Singleton;
 @Singleton
 public class AccountController extends GenericController{
 
-    private static final String PATH = "/account";
-
     @Inject
-    public AccountController(AccountService accountService) {
-        super();
+    public AccountController(Configuration configuration, AccountService accountService) {
+        super(configuration);
 
-        Spark.post(PATH, (request, response) -> {
+        Spark.post(configuration.getAccountPath(), (request, response) -> {
             response.type("application/json");
 
             Account account = new Gson().fromJson(request.body(), Account.class);
@@ -31,9 +30,9 @@ public class AccountController extends GenericController{
             }
         }, json());
 
-        Spark.get(PATH, (request, response) -> accountService.getAccounts(), json());
+        Spark.get(configuration.getAccountPath(), (request, response) -> accountService.getAccounts(), json());
 
-        Spark.get(PATH + "/:id", (request, response) ->
+        Spark.get(configuration.getAccountPath() + "/:id", (request, response) ->
         {
             Account accountById = accountService.getAccountById(Long.parseLong(request.params(":id")));
             if (accountById != null){

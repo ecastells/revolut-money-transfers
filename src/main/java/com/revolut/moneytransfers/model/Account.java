@@ -2,17 +2,19 @@ package com.revolut.moneytransfers.model;
 
 import java.math.BigDecimal;
 
-public class Account {
+public class Account implements Entity{
     Long id;
     private String owner;
     private BigDecimal balance;
     private BigDecimal pendingTransfer;
     private Currency currency;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

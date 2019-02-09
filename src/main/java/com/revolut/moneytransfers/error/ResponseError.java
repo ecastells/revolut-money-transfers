@@ -8,7 +8,7 @@ public class ResponseError {
         this.errorMessage = String.format(errorMessage, (Object) args);
     }
 
-    public ResponseError(Exception ex) {
+    public ResponseError(Throwable ex) {
         this.errorMessage = ex.getMessage();
     }
 

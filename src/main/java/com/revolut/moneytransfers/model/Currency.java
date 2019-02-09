@@ -1,15 +1,21 @@
 package com.revolut.moneytransfers.model;
 
-public enum Currency {
-    ARG(1), EUR(2), USD(3);
+public enum Currency implements Entity{
+    ARG(1L), EUR(2L), USD(3L);
 
-    private int id;
+    private Long id;
 
-    Currency(int id) {
+    Currency(Long id) {
         this.id = id;
     }
 
-    public int getId() {
+    @Override
+    public void setId(Long id) {
+
+    }
+
+    @Override
+    public Long getId() {
         return id;
     }
 }
