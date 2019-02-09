@@ -1,7 +1,6 @@
 package com.revolut.moneytransfers.db;
 
 import com.revolut.moneytransfers.error.ConnectionException;
-import com.revolut.moneytransfers.model.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +22,7 @@ public class DBUtilImpl implements DBUtil {
     @Override
     public <T> ResultExecution<T> executeOnlyReadQuery(String query, GenerateStatement<T> queryExecutor) {
         try (Connection con = dbConnection.getReadConnection();
-             PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = con.prepareStatement(query)) {
             return new ResultExecution(queryExecutor.initializeStatement(stmt));
         } catch (Exception th) {
             log.error("Unexpected exception happens {}", th);

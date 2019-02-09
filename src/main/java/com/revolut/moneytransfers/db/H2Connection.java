@@ -36,22 +36,23 @@ public class H2Connection implements DBConnection {
 
     @Override
     public Connection getReadConnection(){
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            log.error("Error connection to the DB: {}", e);
-            throw new ConnectionException(e);
-        }
-        return connection;
+        return getConnection(true);
     }
 
     @Override
     public Connection getWriteConnection(){
-        Connection connection = null;
+        return getConnection(false);
+    }
+
+    private Connection getConnection(boolean isReadOnly){
+        Connection connection;
         try {
             connection = dataSource.getConnection();
+            if (isReadOnly){
+                connection.setReadOnly(true);
+            } else {
+                connection.setAutoCommit(false);
+            }
         } catch (SQLException e) {
             log.error("Error connection to the DB: {}", e);
             throw new ConnectionException(e);

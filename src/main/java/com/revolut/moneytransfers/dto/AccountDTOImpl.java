@@ -6,7 +6,6 @@ import com.revolut.moneytransfers.model.Currency;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +16,8 @@ public class AccountDTOImpl implements AccountDTO {
 
     private DBUtil dbUtil;
     private static final String GET_ACCOUNTS = "SELECT * FROM account";
-    private static final String GET_ACCOUNTS_BY_ID = "SELECT * FROM account where id = ?";
+    private static final String GET_ACCOUNT_BY_ID = "SELECT * FROM account where id = ?";
+    private static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pendingTransfer, currency_id) VALUES (?, ?, ?, ?)";
 
     @Inject
     public AccountDTOImpl(DBUtil dbUtil) {
@@ -39,26 +39,51 @@ public class AccountDTOImpl implements AccountDTO {
     }
 
     public Account getAccount(Long id){
-        return dbUtil.executeOnlyReadQuery(GET_ACCOUNTS, preparedStatement -> {
+        return dbUtil.executeOnlyReadQuery(GET_ACCOUNT_BY_ID, preparedStatement -> {
+            preparedStatement.setLong(1, id);
             try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (rs != null){
-                    if (rs.next()) {
-                        Account account = fromResultSet(rs);
-                        return account;
-                    }
+                if (rs != null && rs.next()){
+                    return fromResultSet(rs);
                 }
             }
             return null;
         }).getResult();
     }
 
+    @Override
+    public Account createAccount(Account account) {
+        return dbUtil.executeQuery(INSERT_ACCOUNT, preparedStatement -> {
+            preparedStatement.setString(1, account.getOwner());
+            preparedStatement.setBigDecimal(2, account.getBalance());
+            preparedStatement.setBigDecimal(3, account.getPendingTransfer());
+            preparedStatement.setLong(4, account.getCurrency().getId());
+            int rows = preparedStatement.executeUpdate();
+            Long generatedId = null;
 
-   private Account fromResultSet(ResultSet rs) throws SQLException {
+            if (rows != 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getLong(1);
+                    }
+                }
+            }
+
+            if (generatedId == null) {
+                return null;
+            }
+            account.setId(generatedId);
+            return account;
+        }).getResult();
+    }
+
+
+    private Account fromResultSet(ResultSet rs) throws SQLException {
         Account account = new Account();
         account.setId(rs.getLong("id"));
         account.setOwner(rs.getString("owner"));
         account.setBalance(rs.getBigDecimal("balance"));
         account.setPendingTransfer(rs.getBigDecimal("pendingTransfer"));
+        account.setCurrency(Currency.getCurrencyById(rs.getLong("currency_id")));
         return account;
     }
 }

@@ -31,7 +31,5 @@ public class InjectionConfiguration extends AbstractModule {
         AccountController accountController = new AccountController(configuration, accountService);
         bind(AccountService.class).toInstance(accountService);
         bind(AccountController.class).toInstance(accountController);
-
-
     }
 }

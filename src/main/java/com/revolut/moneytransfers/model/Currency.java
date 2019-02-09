@@ -9,9 +9,15 @@ public enum Currency implements Entity{
         this.id = id;
     }
 
-    @Override
-    public void setId(Long id) {
-
+    public static Currency getCurrencyById(Long id){
+        Currency currency = null;
+        for(Currency currency1: Currency.values()){
+            if (currency1.getId().equals(id)){
+                currency = currency1;
+                break;
+            }
+        }
+        return currency;
     }
 
     @Override

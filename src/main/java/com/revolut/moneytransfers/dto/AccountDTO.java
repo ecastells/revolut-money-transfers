@@ -7,4 +7,5 @@ import java.util.List;
 public interface AccountDTO {
     List<Account> getAccounts();
     Account getAccount(Long id);
+    Account createAccount(Account account);
 }
