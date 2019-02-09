@@ -4,36 +4,41 @@ import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 @Singleton
 public class H2Connection implements DBConnection {
     private static final Logger log = LoggerFactory.getLogger(H2Connection.class);
     private static final String JDBC_DRIVER = "org.h2.Driver";
     private static final String DB_URL = "jdbc:h2:~/";
-    private Connection connection;
+    private static BasicDataSource dataSource = new BasicDataSource();
 
     @Inject
     public H2Connection(Configuration config) {
-        try {
-            Class.forName(JDBC_DRIVER);
             StringBuilder url = new StringBuilder(DB_URL);
             url.append(config.getDbName()).append(";INIT=RUNSCRIPT FROM 'classpath:schema-definition.sql'\\;RUNSCRIPT FROM 'classpath:data-load.sql';TRACE_LEVEL_FILE=4");
-            connection = DriverManager.getConnection(url.toString(),config.getUserDb(),config.getUserPass());
-        } catch (ClassNotFoundException | SQLException e) {
-            log.error("Error connection to the DB: {}", e);
-            throw new ConnectionException(e);
-        }
+            dataSource.setUrl(url.toString());
+            dataSource.setUsername(config.getUserDb());
+            dataSource.setPassword(config.getUserPass());
+            dataSource.setInitialSize(100);
+            dataSource.setTestWhileIdle(true);
+            dataSource.setDriverClassName(JDBC_DRIVER);
+            dataSource.setValidationQuery("SELECT 1");
+            dataSource.setPoolPreparedStatements(true);
+            dataSource.setFastFailValidation(true);
+            dataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            dataSource.setTimeBetweenEvictionRunsMillis(30000);
     }
 
     @Override
     public Connection getReadConnection(){
+        Connection connection = null;
         try {
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             log.error("Error connection to the DB: {}", e);
@@ -44,8 +49,9 @@ public class H2Connection implements DBConnection {
 
     @Override
     public Connection getWriteConnection(){
+        Connection connection = null;
         try {
-            connection.setReadOnly(true);
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             log.error("Error connection to the DB: {}", e);
             throw new ConnectionException(e);
