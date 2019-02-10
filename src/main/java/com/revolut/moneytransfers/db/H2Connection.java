@@ -22,9 +22,10 @@ public class H2Connection implements DBConnection {
             StringBuilder url = new StringBuilder(DB_URL);
             url.append(config.getDbName()).append(";INIT=RUNSCRIPT FROM 'classpath:schema-definition.sql'\\;RUNSCRIPT FROM 'classpath:data-load.sql';TRACE_LEVEL_FILE=4");
             dataSource.setUrl(url.toString());
-            dataSource.setUsername(config.getUserDb());
-            dataSource.setPassword(config.getUserPass());
-            dataSource.setInitialSize(100);
+            dataSource.setUsername(config.getDbUser());
+            dataSource.setPassword(config.getDbPass());
+            //Set the connection pool size
+            dataSource.setInitialSize(config.getDbPoolSize());
             dataSource.setTestWhileIdle(true);
             dataSource.setDriverClassName(JDBC_DRIVER);
             dataSource.setValidationQuery("SELECT 1");

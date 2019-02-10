@@ -3,7 +3,6 @@ package com.revolut.moneytransfers.dto;
 import com.revolut.moneytransfers.db.DBUtil;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.model.Currency;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.ResultSet;
@@ -17,7 +16,7 @@ public class AccountDTOImpl implements AccountDTO {
     private DBUtil dbUtil;
     public static final String GET_ACCOUNTS = "SELECT * FROM account";
     public static final String GET_ACCOUNT_BY_ID = "SELECT * FROM account where id = ?";
-    public static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pendingTransfer, currency_id) VALUES (?, ?, ?, ?)";
+    public static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES (?, ?, ?, ?)";
 
     @Inject
     public AccountDTOImpl(DBUtil dbUtil) {

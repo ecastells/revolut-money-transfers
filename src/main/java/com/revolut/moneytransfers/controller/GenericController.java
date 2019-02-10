@@ -1,7 +1,6 @@
 package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
-import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ConnectionException;
 import com.revolut.moneytransfers.error.ResponseError;
 import org.slf4j.Logger;
@@ -13,10 +12,7 @@ public abstract class GenericController<T extends GenericController> {
 
     private static final Logger log = LoggerFactory.getLogger(GenericController.class);
 
-    public GenericController(Configuration configuration) {
-
-        Spark.port(configuration.getWebPort());
-
+    public GenericController() {
         Spark.before((request, response) -> {
             if(log.isTraceEnabled() && request != null)
                 log.trace("requestPathInfo: {}, requestBody: {}", request.pathInfo(), request.body());
@@ -37,6 +33,7 @@ public abstract class GenericController<T extends GenericController> {
             response.status(500);
             response.body(toJson(new ResponseError(error)));
         });
+
     }
 
     protected static String toJson(Object object) {
