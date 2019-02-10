@@ -44,6 +44,17 @@ public class H2Connection implements DBConnection {
         return getConnection(false);
     }
 
+    @Override
+    public void destroyConnection() {
+        if(dataSource != null){
+            try {
+                dataSource.close();
+            } catch (SQLException e) {
+                log.error("Error closing the datasource {}", e);
+            }
+        }
+    }
+
     private Connection getConnection(boolean isReadOnly){
         Connection connection;
         try {

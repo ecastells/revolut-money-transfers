@@ -8,6 +8,7 @@ import java.sql.SQLException;
 public interface DBUtil {
     <T> ResultExecution<T> executeOnlyReadQuery(String query, GenerateStatement<T> queryExecutor);
     <T> ResultExecution<T> executeQuery(String query, GenerateStatement<T> queryExecutor);
+    void destroyConnection();
 
     interface GenerateStatement <T>{
         T initializeStatement (PreparedStatement preparedStatement) throws SQLException;

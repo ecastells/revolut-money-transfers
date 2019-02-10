@@ -15,9 +15,9 @@ import java.util.List;
 public class AccountDTOImpl implements AccountDTO {
 
     private DBUtil dbUtil;
-    private static final String GET_ACCOUNTS = "SELECT * FROM account";
-    private static final String GET_ACCOUNT_BY_ID = "SELECT * FROM account where id = ?";
-    private static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pendingTransfer, currency_id) VALUES (?, ?, ?, ?)";
+    public static final String GET_ACCOUNTS = "SELECT * FROM account";
+    public static final String GET_ACCOUNT_BY_ID = "SELECT * FROM account where id = ?";
+    public static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pendingTransfer, currency_id) VALUES (?, ?, ?, ?)";
 
     @Inject
     public AccountDTOImpl(DBUtil dbUtil) {

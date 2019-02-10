@@ -3,7 +3,6 @@ package com.revolut.moneytransfers.db;
 import com.revolut.moneytransfers.error.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.*;
@@ -41,6 +40,11 @@ public class DBUtilImpl implements DBUtil {
             log.error("Unexpected exception happens {}", th);
             throw new ConnectionException(th);
         }
+    }
+
+    @Override
+    public void destroyConnection() {
+        this.dbConnection.destroyConnection();
     }
 
 

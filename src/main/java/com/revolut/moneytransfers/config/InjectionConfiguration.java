@@ -2,6 +2,7 @@ package com.revolut.moneytransfers.config;
 
 import com.google.inject.AbstractModule;
 import com.revolut.moneytransfers.controller.AccountController;
+import com.revolut.moneytransfers.controller.AccountControllerImpl;
 import com.revolut.moneytransfers.db.DBConnection;
 import com.revolut.moneytransfers.db.DBUtil;
 import com.revolut.moneytransfers.db.DBUtilImpl;
@@ -15,21 +16,12 @@ public class InjectionConfiguration extends AbstractModule {
 
     @Override
     protected void configure() {
-       Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration();
         bind(Configuration.class).toInstance(configuration);
-
-        DBConnection dbConnection = new H2Connection(configuration);
-        bind(DBConnection.class).toInstance(dbConnection);
-
-        DBUtil dbUtil = new DBUtilImpl(dbConnection);
-        bind(DBUtil.class).toInstance(dbUtil);
-
-        AccountDTOImpl accountDTO = new AccountDTOImpl(dbUtil);
-        bind(AccountDTO.class).toInstance(accountDTO);
-
-        AccountService accountService = new AccountServiceImpl(accountDTO);
-        AccountController accountController = new AccountController(configuration, accountService);
-        bind(AccountService.class).toInstance(accountService);
-        bind(AccountController.class).toInstance(accountController);
+        bind(DBConnection.class).to(H2Connection.class);
+        bind(DBUtil.class).to(DBUtilImpl.class);
+        bind(AccountDTO.class).to(AccountDTOImpl.class);
+        bind(AccountService.class).to(AccountServiceImpl.class);
+        bind(AccountController.class).to(AccountControllerImpl.class);
     }
 }
