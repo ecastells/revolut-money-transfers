@@ -82,7 +82,7 @@ public class AccountDTOImpl implements AccountDTO {
         account.setId(rs.getLong("id"));
         account.setOwner(rs.getString("owner"));
         account.setBalance(rs.getBigDecimal("balance"));
-        account.setPendingTransfer(rs.getBigDecimal("pendingTransfer"));
+        account.setPendingTransfer(rs.getBigDecimal("pending_transfer"));
         account.setCurrency(Currency.getCurrencyById(rs.getLong("currency_id")));
         return account;
     }

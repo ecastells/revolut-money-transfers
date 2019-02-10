@@ -3,7 +3,7 @@ package com.revolut.moneytransfers.model;
 import java.math.BigDecimal;
 
 public class Account implements Entity{
-    Long id;
+    private Long id;
     private String owner;
     private BigDecimal balance;
     private BigDecimal pendingTransfer;

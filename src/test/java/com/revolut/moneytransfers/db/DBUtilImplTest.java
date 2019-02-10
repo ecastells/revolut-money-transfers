@@ -40,7 +40,7 @@ public class DBUtilImplTest {
     public void testInsertGetAndDelete(){
         // insert
         final String owner = "test";
-        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQuery("INSERT INTO account (owner, balance, pendingTransfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
+        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQuery("INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
             Account account = new Account();
             int rows = preparedStatement.executeUpdate();
             Long generatedId = null;
