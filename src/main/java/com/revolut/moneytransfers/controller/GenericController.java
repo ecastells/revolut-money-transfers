@@ -3,6 +3,7 @@ package com.revolut.moneytransfers.controller;
 import com.google.gson.Gson;
 import com.revolut.moneytransfers.error.ConnectionException;
 import com.revolut.moneytransfers.error.ResponseError;
+import com.revolut.moneytransfers.error.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ResponseTransformer;
@@ -31,6 +32,11 @@ public abstract class GenericController<T extends GenericController> {
 
         Spark.exception(ConnectionException.class, (error, request, response) -> {
             response.status(500);
+            response.body(toJson(new ResponseError(error)));
+        });
+
+        Spark.exception(ValidationException.class, (error, request, response) -> {
+            response.status(422);
             response.body(toJson(new ResponseError(error)));
         });
 

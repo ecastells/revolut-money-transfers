@@ -21,7 +21,7 @@ public class CurrencyConversionDTOImpl implements CurrencyConversionDTO, Generic
 
     @Override
     public CurrencyConversion getCurrencyConversion(Currency fromCurrency, Currency toCurrency) {
-        return dbUtil.executeOnlyReadQuery(GET_CURRENCY_CONVERSION_BY_FROM_TO_CURRENCY, preparedStatement -> {
+        return dbUtil.executeQuery(true, GET_CURRENCY_CONVERSION_BY_FROM_TO_CURRENCY, preparedStatement -> {
             preparedStatement.setLong(1, fromCurrency.getId());
             preparedStatement.setLong(2, toCurrency.getId());
             return getEntity(preparedStatement);

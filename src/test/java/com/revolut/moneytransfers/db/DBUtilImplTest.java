@@ -9,6 +9,7 @@ import com.revolut.moneytransfers.model.Account;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import java.sql.Connection;
 import java.sql.ResultSet;
 public class DBUtilImplTest {
 
@@ -27,7 +28,7 @@ public class DBUtilImplTest {
 
     @Test
     public void testDBConnection(){
-        DBUtil.ResultExecution<ResultSet> resultSetResultExecution = dbUtil.executeOnlyReadQuery("SELECT 1", preparedStatement -> {
+        DBUtil.ResultExecution<ResultSet> resultSetResultExecution = dbUtil.executeQuery(true,"SELECT 1", preparedStatement -> {
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 return rs;
             }
@@ -37,10 +38,10 @@ public class DBUtilImplTest {
     }
 
     @Test
-    public void testInsertGetAndDelete(){
+    public void testInsertGetAndDeleteWithoutTransaction(){
         // insert
         final String owner = "test";
-        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQuery("INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
+        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQuery(false, "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
             Account account = new Account();
             int rows = preparedStatement.executeUpdate();
             Long generatedId = null;
@@ -61,7 +62,7 @@ public class DBUtilImplTest {
         assertNotNull(id);
 
         // get
-        DBUtil.ResultExecution<String> resultOwner = dbUtil.executeOnlyReadQuery("SELECT owner from account where id = ?", preparedStatement -> {
+        DBUtil.ResultExecution<String> resultOwner = dbUtil.executeQuery(true,"SELECT owner from account where id = ?", preparedStatement -> {
             preparedStatement.setLong(1, id);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs != null && rs.next()){
@@ -75,7 +76,57 @@ public class DBUtilImplTest {
         assertEquals(owner, resultOwner.getResult());
 
         // delete
-        DBUtil.ResultExecution<Integer> resultDelete = dbUtil.executeQuery("DELETE from account where id = ?", preparedStatement -> {
+        DBUtil.ResultExecution<Integer> resultDelete = dbUtil.executeQuery(false,"DELETE from account where id = ?", preparedStatement -> {
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate();
+        });
+        assertNotNull(resultDelete);
+        assertNotNull(resultDelete.getResult());
+        assertEquals(Integer.valueOf(1), resultDelete.getResult());
+    }
+
+    @Test
+    public void testInsertGetAndDeleteWithTransaction(){
+        // insert
+        final String owner = "test";
+        Connection connection = dbUtil.getConnection();
+
+        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQueryInTransaction(connection, "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
+            Account account = new Account();
+            int rows = preparedStatement.executeUpdate();
+            Long generatedId = null;
+
+            if (rows != 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getLong(1);
+                    }
+                }
+            }
+            account.setId(generatedId);
+            return account;
+        });
+        assertNotNull(resultInsertion);
+        assertNotNull(resultInsertion.getResult());
+        final Long id = resultInsertion.getResult().getId();
+        assertNotNull(id);
+
+        // get
+        DBUtil.ResultExecution<String> resultOwner = dbUtil.executeQueryInTransaction(connection,"SELECT owner from account where id = ?", preparedStatement -> {
+            preparedStatement.setLong(1, id);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs != null && rs.next()){
+                    return rs.getString("owner");
+                }
+            }
+            return null;
+        });
+        assertNotNull(resultOwner);
+        assertNotNull(resultOwner.getResult());
+        assertEquals(owner, resultOwner.getResult());
+
+        // delete
+        DBUtil.ResultExecution<Integer> resultDelete = dbUtil.executeQueryInTransaction(connection,"DELETE from account where id = ?", preparedStatement -> {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate();
         });

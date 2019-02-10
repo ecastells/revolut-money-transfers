@@ -19,9 +19,34 @@ public class DBUtilImpl implements DBUtil {
     }
 
     @Override
-    public <T> ResultExecution<T> executeOnlyReadQuery(String query, GenerateStatement<T> queryExecutor) {
-        try (Connection con = dbConnection.getReadConnection();
-             PreparedStatement stmt = con.prepareStatement(query)) {
+    public <T> ResultExecution<T> executeQuery(boolean readOnly, String query, GenerateStatement<T> queryExecutor) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = dbConnection.getConnection();
+            ResultExecution resultExecution;
+            if(readOnly){
+                stmt = con.prepareStatement(query);
+                resultExecution = new ResultExecution(queryExecutor.initializeStatement(stmt));
+            } else {
+                stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                resultExecution = new ResultExecution(queryExecutor.initializeStatement(stmt));
+                con.commit();
+            }
+            return resultExecution;
+        } catch (Exception th) {
+            log.error("Unexpected exception happens {}", th);
+            rollback(con);
+            throw new ConnectionException(th);
+        } finally {
+            closePreparedStatement(stmt);
+            closeConnection(con);
+        }
+    }
+
+    @Override
+    public <T> ResultExecution<T> executeQueryInTransaction(Connection con, String query,  GenerateStatement<T> queryExecutor) {
+        try (PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             return new ResultExecution(queryExecutor.initializeStatement(stmt));
         } catch (Exception th) {
             log.error("Unexpected exception happens {}", th);
@@ -30,16 +55,8 @@ public class DBUtilImpl implements DBUtil {
     }
 
     @Override
-    public <T> ResultExecution<T> executeQuery(String query,  GenerateStatement<T> queryExecutor) {
-        try (Connection con = dbConnection.getWriteConnection();
-             PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            ResultExecution resultExecution = new ResultExecution(queryExecutor.initializeStatement(stmt));
-            con.commit();
-            return resultExecution;
-        } catch (Exception th) {
-            log.error("Unexpected exception happens {}", th);
-            throw new ConnectionException(th);
-        }
+    public Connection getConnection() {
+        return this.dbConnection.getConnection();
     }
 
     @Override
@@ -47,5 +64,40 @@ public class DBUtilImpl implements DBUtil {
         this.dbConnection.destroyConnection();
     }
 
+    @Override
+    public void rollback(Connection con){
+        if (con != null) {
+            try {
+                con.rollback();
+            } catch (SQLException e) {
+                log.error("Exception rollback connection {}", e);
+                throw new ConnectionException(e);
+            }
+        }
+    }
+
+    @Override
+    public void closeConnection(Connection con){
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                log.error("Exception closing connection {}", e);
+                throw new ConnectionException(e);
+            }
+        }
+    }
+
+    @Override
+    public void closePreparedStatement(PreparedStatement ps){
+        if (ps != null) {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                log.error("Exception closing PreparedStatement {}", e);
+                throw new ConnectionException(e);
+            }
+        }
+    }
 
 }

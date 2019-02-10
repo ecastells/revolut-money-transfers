@@ -35,7 +35,7 @@ public class H2Connection implements DBConnection {
             dataSource.setTimeBetweenEvictionRunsMillis(30000);
     }
 
-    @Override
+/*    @Override
     public Connection getReadConnection(){
         return getConnection(true);
     }
@@ -43,7 +43,7 @@ public class H2Connection implements DBConnection {
     @Override
     public Connection getWriteConnection(){
         return getConnection(false);
-    }
+    }*/
 
     @Override
     public void destroyConnection() {
@@ -56,15 +56,16 @@ public class H2Connection implements DBConnection {
         }
     }
 
-    private Connection getConnection(boolean isReadOnly){
+    @Override
+    public Connection getConnection(){
         Connection connection;
         try {
             connection = dataSource.getConnection();
-            if (isReadOnly){
+          /*  if (isReadOnly){
                 connection.setReadOnly(true);
-            } else {
+            } else {*/
                 connection.setAutoCommit(false);
-            }
+         //   }
         } catch (SQLException e) {
             log.error("Error connection to the DB: {}", e);
             throw new ConnectionException(e);

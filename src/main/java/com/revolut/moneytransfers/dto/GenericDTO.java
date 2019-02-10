@@ -1,5 +1,6 @@
 package com.revolut.moneytransfers.dto;
 
+import com.revolut.moneytransfers.error.ConnectionException;
 import com.revolut.moneytransfers.model.Entity;
 
 import java.sql.PreparedStatement;
@@ -36,7 +37,7 @@ public interface GenericDTO<T extends Entity> {
         int rows = preparedStatement.executeUpdate();
         Long generatedId = null;
 
-        if (rows != 0) {
+        if (rows > 0) {
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     generatedId = generatedKeys.getLong(1);
@@ -45,9 +46,16 @@ public interface GenericDTO<T extends Entity> {
         }
 
         if (generatedId == null) {
-            return false;
+            throw new ConnectionException("Getting exception when trying to insert: {}" + entity);
         }
         entity.setId(generatedId);
+        return true;
+    }
+
+    default boolean updateEntity(T entity, PreparedStatement preparedStatement) throws SQLException {
+        if( preparedStatement.executeUpdate() < 1){
+            throw new ConnectionException("Getting exception updating the Entity {}: " + entity);
+        }
         return true;
     }
 

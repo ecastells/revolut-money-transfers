@@ -30,13 +30,13 @@ public class AccountDTOImplTest {
         List<Account> accounts = Arrays.asList(createAccount(1L, "emi"), createAccount(2L, "gre"));
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(accounts);
 
-        when(dbUtilMock.executeOnlyReadQuery(eq(accountDTO.GET_ACCOUNTS), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
+        when(dbUtilMock.executeQuery(eq(true), eq(accountDTO.GET_ACCOUNTS), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
         List<Account> accountsResult = accountDTO.getAccounts();
 
         assertNotNull(accountsResult);
         assertEquals(2, accountsResult.size());
         assertEquals(accounts, accountsResult);
-        verify(dbUtilMock, times(1)).executeOnlyReadQuery(eq(accountDTO.GET_ACCOUNTS), any(DBUtil.GenerateStatement.class));
+        verify(dbUtilMock, times(1)).executeQuery(eq(true), eq(accountDTO.GET_ACCOUNTS), any(DBUtil.GenerateStatement.class));
     }
 
     @Test
@@ -44,12 +44,12 @@ public class AccountDTOImplTest {
         Account account = createAccount(1L, "emi");
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(account);
 
-        when(dbUtilMock.executeOnlyReadQuery(eq(accountDTO.GET_ACCOUNT_BY_ID), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
+        when(dbUtilMock.executeQuery(eq(true), eq(accountDTO.GET_ACCOUNT_BY_ID), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
         Account accountResult = accountDTO.getAccount(1L);
 
         assertNotNull(accountResult);
         assertEquals(account, accountResult);
-        verify(dbUtilMock, times(1)).executeOnlyReadQuery(eq(accountDTO.GET_ACCOUNT_BY_ID), any(DBUtil.GenerateStatement.class));
+        verify(dbUtilMock, times(1)).executeQuery(eq(true), eq(accountDTO.GET_ACCOUNT_BY_ID), any(DBUtil.GenerateStatement.class));
     }
 
     @Test
@@ -57,12 +57,12 @@ public class AccountDTOImplTest {
         Account account = createAccount(1L, "emi");
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(account);
 
-        when(dbUtilMock.executeQuery(eq(accountDTO.INSERT_ACCOUNT), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
+        when(dbUtilMock.executeQuery(eq(false), eq(accountDTO.INSERT_ACCOUNT), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
         Account accountResult = accountDTO.createAccount(account);
 
         assertNotNull(accountResult);
         assertEquals(account, accountResult);
-        verify(dbUtilMock, times(1)).executeQuery(eq(accountDTO.INSERT_ACCOUNT), any(DBUtil.GenerateStatement.class));
+        verify(dbUtilMock, times(1)).executeQuery(eq(false), eq(accountDTO.INSERT_ACCOUNT), any(DBUtil.GenerateStatement.class));
     }
 
 

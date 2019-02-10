@@ -2,6 +2,7 @@ package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
 import com.revolut.moneytransfers.config.Configuration;
+import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.service.AccountService;
 import spark.Spark;
@@ -26,7 +27,7 @@ public class AccountController extends GenericController {
                 return accountCreated;
             } else {
                 response.status(405);
-                return "Error creating Account";
+                return new ResponseError("Error creating Account");
             }
         }, json());
 
@@ -39,7 +40,7 @@ public class AccountController extends GenericController {
                 return accountById;
             } else {
                 response.status(404);
-                return "Account not found";
+                return new ResponseError("Account not found");
             }
         }, json());
     }

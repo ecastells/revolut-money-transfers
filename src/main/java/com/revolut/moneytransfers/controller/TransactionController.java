@@ -2,6 +2,7 @@ package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
 import com.revolut.moneytransfers.config.Configuration;
+import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Transaction;
 import com.revolut.moneytransfers.service.TransactionService;
 import spark.Spark;
@@ -25,7 +26,7 @@ public class TransactionController extends GenericController {
                 return transactionCreated;
             } else {
                 response.status(405);
-                return "Error creating Transaction";
+                return new ResponseError("Error creating Transaction");
             }
         }, json());
 
@@ -38,7 +39,7 @@ public class TransactionController extends GenericController {
                 return transactionById;
             } else {
                 response.status(404);
-                return "Transaction not found";
+                return new ResponseError("Transaction not found");
             }
         }, json());
     }
