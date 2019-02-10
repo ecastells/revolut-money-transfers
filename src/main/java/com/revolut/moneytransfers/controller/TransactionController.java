@@ -16,6 +16,7 @@ public class TransactionController extends GenericController {
     public TransactionController(Configuration configuration, TransactionService transactionService) {
         super();
 
+         // TODO validate Transaction input parameters
         Spark.post(configuration.getTransactionPath(), (request, response) -> {
             Transaction transaction = new Gson().fromJson(request.body(), Transaction.class);
             Transaction transactionCreated = transactionService.createTransaction(transaction);

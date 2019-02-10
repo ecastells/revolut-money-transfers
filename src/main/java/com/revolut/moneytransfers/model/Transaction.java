@@ -2,7 +2,6 @@ package com.revolut.moneytransfers.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class Transaction implements Entity{
     private Long id;
@@ -10,6 +9,7 @@ public class Transaction implements Entity{
     private BigDecimal amount;
     private Currency currency;
     private Long toAccountId;
+    private String status;
     private Timestamp creationDate;
     private Timestamp lastUpdatedDate;
 
@@ -18,6 +18,7 @@ public class Transaction implements Entity{
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,6 +55,14 @@ public class Transaction implements Entity{
         this.toAccountId = toAccountId;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Timestamp getCreationDate() {
         return creationDate;
     }
@@ -68,5 +77,9 @@ public class Transaction implements Entity{
 
     public void setLastUpdatedDate(Timestamp lastUpdatedDate) {
         this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public enum TransactionStatus {
+        PENDING, CONFIRMED, REJECTED
     }
 }

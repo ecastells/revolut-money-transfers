@@ -33,6 +33,7 @@ CREATE TABLE transaction (
   amount DECIMAL(19,2) NOT NULL,
   currency_id INT NOT NULL,
   to_account_id BIGINT NOT NULL,
+  status VARCHAR(40) NOT NULL,
   creation_date TIMESTAMP NOT NULL,
   last_update_date TIMESTAMP,
   FOREIGN KEY(from_account_id) REFERENCES account(id),

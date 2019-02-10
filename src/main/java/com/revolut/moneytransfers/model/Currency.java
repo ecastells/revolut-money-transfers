@@ -24,4 +24,9 @@ public enum Currency implements Entity{
     public Long getId() {
         return id;
     }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
