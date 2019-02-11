@@ -6,10 +6,15 @@ import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.service.AccountService;
 import spark.Spark;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * TransactionController class. Provide operations over RestFul to Retrieve and Create Transactions:
+ * - POST /account: Allow to create a Account with a initial balance and kind of currency
+ * - GET /account: Allow to retrieve All Accounts created on the System
+ * - GET /account/:id: Allow to retrieve a specific Account according to its id
+ */
 @Singleton
 public class AccountController extends GenericController {
 
@@ -18,8 +23,6 @@ public class AccountController extends GenericController {
         super();
 
         Spark.post(configuration.getAccountPath(), (request, response) -> {
-          //  response.type("application/json");
-
             Account account = new Gson().fromJson(request.body(), Account.class);
             Account accountCreated = accountService.createAccount(account);
             if (accountCreated != null){

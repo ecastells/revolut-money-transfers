@@ -6,10 +6,15 @@ import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Transaction;
 import com.revolut.moneytransfers.service.TransactionService;
 import spark.Spark;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * TransactionController class. Provide operations over RestFul to Retrieve and Create Transactions:
+ * - POST /transaction: Allow to create a Transaction for money transfers between accounts. The transaction state is PENDING until it is confirmed
+ * - GET /transaction: Allow to retrieve All Transactions created on the System
+ * - GET /transaction/:id: Allow to retrieve a specific Transaction according to its id
+ */
 @Singleton
 public class TransactionController extends GenericController {
 
@@ -17,7 +22,6 @@ public class TransactionController extends GenericController {
     public TransactionController(Configuration configuration, TransactionService transactionService) {
         super();
 
-         // TODO validate Transaction input parameters
         Spark.post(configuration.getTransactionPath(), (request, response) -> {
             Transaction transaction = new Gson().fromJson(request.body(), Transaction.class);
             Transaction transactionCreated = transactionService.createTransaction(transaction);
