@@ -25,8 +25,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> getTransactions() {
-        return transactionDTO.getTransactions();
+    public List<Transaction> getTransactions(Transaction.TransactionStatus status) {
+        return transactionDTO.getTransactions(status);
     }
 
     @Override

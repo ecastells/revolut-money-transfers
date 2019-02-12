@@ -2,11 +2,9 @@ package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
 import com.revolut.moneytransfers.config.Config;
-import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.service.AccountService;
-import spark.Spark;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

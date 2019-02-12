@@ -25,6 +25,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
     AccountDTO accountDTO;
 
     public static final String GET_TRANSACTIONS = "SELECT * FROM transaction";
+    public static final String GET_TRANSACTIONS_BY_STATUS = GET_TRANSACTIONS + " where status = ?";
     public static final String GET_TRANSACTION_BY_ID = "SELECT * FROM transaction where id = ?";
     public static final String INSERT_TRANSACTION = "INSERT INTO transaction " +
             "(from_account_id, amount, currency_id, to_account_id, status, creation_date) VALUES (?, ?, ?, ?, ?, ?)";
@@ -45,8 +46,15 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
     }
 
     @Override
-    public List<Transaction> getTransactions() {
-        return dbUtil.executeQuery(true, GET_TRANSACTIONS, this::getListEntities).getResult();
+    public List<Transaction> getTransactions(Transaction.TransactionStatus status) {
+        if(status == null){
+            return dbUtil.executeQuery(true, GET_TRANSACTIONS, this::getListEntities).getResult();
+        } else {
+            return dbUtil.executeQuery(true, GET_TRANSACTIONS_BY_STATUS, preparedStatement -> {
+                preparedStatement.setString(1, status.name());
+                return getListEntities(preparedStatement);
+            }).getResult();
+        }
     }
 
     @Override
@@ -120,7 +128,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
         transaction.setAmount(rs.getBigDecimal("amount"));
         transaction.setCurrency(Currency.getCurrencyById(rs.getLong("currency_id")));
         transaction.setToAccountId(rs.getLong("to_account_id"));
-        transaction.setStatus(rs.getString("status"));
+        transaction.setStatus(Transaction.TransactionStatus.valueOf(rs.getString("status")));
         transaction.setCreationDate(rs.getTimestamp("creation_date"));
         transaction.setLastUpdatedDate(rs.getTimestamp("last_update_date"));
         return transaction;

@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TransactionService {
     Transaction getTransactionById(Long id);
-    List<Transaction> getTransactions();
+    List<Transaction> getTransactions(Transaction.TransactionStatus status);
     Transaction createTransaction(Transaction transaction);
 }

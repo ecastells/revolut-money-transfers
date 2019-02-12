@@ -9,7 +9,7 @@ public class Transaction implements Entity{
     private BigDecimal amount;
     private Currency currency;
     private Long toAccountId;
-    private String status;
+    private TransactionStatus status;
     private Timestamp creationDate;
     private Timestamp lastUpdatedDate;
 
@@ -55,11 +55,11 @@ public class Transaction implements Entity{
         this.toAccountId = toAccountId;
     }
 
-    public String getStatus() {
+    public TransactionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TransactionStatus status) {
         this.status = status;
     }
 
