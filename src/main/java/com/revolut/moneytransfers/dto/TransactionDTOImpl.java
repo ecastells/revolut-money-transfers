@@ -27,6 +27,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
     public static final String GET_TRANSACTIONS = "SELECT * FROM transaction";
     public static final String GET_TRANSACTIONS_BY_STATUS = GET_TRANSACTIONS + " where status = ?";
     public static final String GET_TRANSACTION_BY_ID = "SELECT * FROM transaction where id = ?";
+    public static final String GET_TRANSACTION_BY_ID_TO_BE_UPDATED = GET_TRANSACTION_BY_ID + " FOR UPDATE";
     public static final String INSERT_TRANSACTION = "INSERT INTO transaction " +
             "(from_account_id, amount, currency_id, to_account_id, status, creation_date) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -65,7 +66,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
         try {
             connection = dbUtil.getConnection();
 
-            // 1- Get the account
+            // 1- Get the account to be updated
             Account fromAccount = accountDTO.getAccountToBeUpdate(connection, transaction.getFromAccountId());
 
             // 2- Generate Currency Conversion
@@ -77,8 +78,9 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
                 moneyToTransfer = currencyConversion != null ?  transaction.getAmount().multiply(currencyConversion.getRateChange()) : BigDecimal.ZERO;
             }
 
+            // TODO not reduce the balance until it is confirmed
             BigDecimal newBalance = fromAccount.getBalance().subtract(moneyToTransfer);
-
+            // TODO check balance - pending transfer > 0
             if (newBalance.compareTo(BigDecimal.ZERO) < 0){
                 throw new ValidationException("The following account does not have enough money");
             }
@@ -104,8 +106,61 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
         } finally {
             dbUtil.closeConnection(connection);
         }
-       return transactionResponse;
+        return transactionResponse;
     }
+
+    @Override
+    public void processTransaction(Long id) {
+        Connection connection = null;
+
+        try {
+            connection = dbUtil.getConnection();
+
+            // 1- Get the transaction to be updated
+            Transaction transaction = getTransactionByIdToBeUpdated(connection, id);
+
+            // 2 - Get the destination account to be updated
+            Account toAccount = accountDTO.getAccountToBeUpdate(connection, transaction.getFromAccountId());
+
+            // 3 - Generate Currency Conversion
+            BigDecimal moneyToReceive;
+            if (toAccount.getCurrency().equals(transaction.getCurrency())){
+                moneyToReceive = transaction.getAmount();
+            } else {
+                CurrencyConversion currencyConversion = currencyConversionDTO.getCurrencyConversion(transaction.getCurrency(), toAccount.getCurrency());
+                moneyToReceive = currencyConversion != null ?  transaction.getAmount().multiply(currencyConversion.getRateChange()) : BigDecimal.ZERO;
+            }
+
+            BigDecimal newBalance = toAccount.getBalance().add(moneyToReceive);
+
+            // 4 - Update the current Account
+            accountDTO.updateAccountBalance(connection, toAccount.getId(), newBalance, null);
+
+            // TODO in success scenario decrease balance and pending for Origin account
+
+
+            connection.commit();
+
+        } catch (RuntimeException e){
+            dbUtil.rollback(connection);
+            throw e;
+        } catch (SQLException e) {
+            dbUtil.rollback(connection);
+            throw new ConnectionException(e);
+        } finally {
+            dbUtil.closeConnection(connection);
+        }
+    }
+
+    // TODO create a method to decrease pending for Origin account
+
+    protected Transaction getTransactionByIdToBeUpdated(Connection con, Long id) {
+        return dbUtil.executeQuery(true, GET_TRANSACTION_BY_ID_TO_BE_UPDATED, preparedStatement -> {
+            preparedStatement.setLong(1, id);
+            return getEntity(preparedStatement);
+        }).getResult();
+    }
+
 
     protected Transaction createTransaction(Connection con, Transaction transaction) {
         return dbUtil.executeQueryInTransaction(con, INSERT_TRANSACTION, preparedStatement -> {

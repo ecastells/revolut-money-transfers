@@ -1,7 +1,6 @@
 package com.revolut.moneytransfers.dto;
 
 import com.revolut.moneytransfers.db.DBUtil;
-import com.revolut.moneytransfers.error.ConnectionException;
 import com.revolut.moneytransfers.model.Account;
 import com.revolut.moneytransfers.model.Currency;
 import javax.inject.Inject;
@@ -17,10 +16,11 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
 
     private DBUtil dbUtil;
     public static final String GET_ACCOUNTS = "SELECT * FROM account";
-    public static final String GET_ACCOUNT_BY_ID = "SELECT * FROM account where id = ?";
+    public static final String GET_ACCOUNT_BY_ID = GET_ACCOUNTS + " where id = ?";
+    public static final String GET_ACCOUNT_BY_ID_TO_BE_UPDATED = GET_ACCOUNT_BY_ID + " FOR UPDATE";
     public static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES (?, ?, ?, ?)";
-    public static final String GET_ACCOUNT_BY_ID_TO_BE_UPDATED = "SELECT * FROM account where id = ? FOR UPDATE";
-    public static final String UPDATE_ACCOUNT_BALANCE = "UPDATE account SET balance = ?, pending_transfer = ? where id = ?";
+    public static final String UPDATE_ACCOUNT_BALANCE_PENDING_TRANSFER = "UPDATE account SET balance = ?, pending_transfer = ? where id = ?";
+    public static final String UPDATE_ACCOUNT_BALANCE = "UPDATE account SET balance = ? where id = ?";
 
     @Inject
     public AccountDTOImpl(DBUtil dbUtil) {
@@ -59,10 +59,14 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
 
     @Override
     public Account updateAccountBalance(Connection con, Long accountId, BigDecimal newBalance, BigDecimal pendingTransfer) {
-        return dbUtil.executeQueryInTransaction(con, UPDATE_ACCOUNT_BALANCE, preparedStatement -> {
+        return dbUtil.executeQueryInTransaction(con, pendingTransfer != null ? UPDATE_ACCOUNT_BALANCE_PENDING_TRANSFER : UPDATE_ACCOUNT_BALANCE, preparedStatement -> {
             preparedStatement.setBigDecimal(1, newBalance);
-            preparedStatement.setBigDecimal(2, pendingTransfer);
-            preparedStatement.setLong(3, accountId);
+            if (pendingTransfer != null){
+                preparedStatement.setBigDecimal(2, pendingTransfer);
+                preparedStatement.setLong(3, accountId);
+            } else {
+                preparedStatement.setLong(2, accountId);
+            }
             Account account = new Account();
             account.setId(accountId);
             account.setBalance(newBalance);
