@@ -97,13 +97,13 @@ public class TransactionDTOImplTest {
         BigDecimal balance = BigDecimal.TEN;
         BigDecimal newBalance = balance.subtract(moneyToBeTransfer);
 
-        Account account = createAccount(accountId, currencyAccount,balance, BigDecimal.ZERO);
+        Account account = createAccount(accountId, currencyAccount,balance);
         Transaction transaction = createTransaction(1L, 1L, moneyToBeTransfer, currencyTransaction, 2L, null);
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(transaction);
 
         when(dbUtilMock.getConnection()).thenReturn(connectionMock);
         when(accountDTOMock.getAccountToBeUpdate(eq(connectionMock), eq(accountId))).thenReturn(account);
-        when(accountDTOMock.updateAccountBalance(eq(connectionMock), eq(accountId),  eq(newBalance), eq(moneyToBeTransfer))).thenReturn(account);
+        when(accountDTOMock.updateAccountBalance(eq(connectionMock), eq(accountId),  eq(newBalance))).thenReturn(account);
 
         when(dbUtilMock.executeQueryInTransaction(eq(connectionMock), eq(TransactionDTOImpl.INSERT_TRANSACTION), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
         doNothing().when(connectionMock).commit();
@@ -117,7 +117,7 @@ public class TransactionDTOImplTest {
         // Check that these mock methods were calling one time
         verify(dbUtilMock, times(1)).getConnection();
         verify(accountDTOMock, times(1)).getAccountToBeUpdate(eq(connectionMock), eq(accountId));
-        verify(accountDTOMock, times(1)).updateAccountBalance(eq(connectionMock), eq(accountId), eq(newBalance), eq(moneyToBeTransfer));
+        verify(accountDTOMock, times(1)).updateAccountBalance(eq(connectionMock), eq(accountId), eq(newBalance));
         verify(dbUtilMock, times(1)).executeQueryInTransaction(eq(connectionMock), eq(TransactionDTOImpl.INSERT_TRANSACTION), any(DBUtil.GenerateStatement.class));
         verify(connectionMock, times(1)).commit();
         verify(dbUtilMock, times(1)).closeConnection(connectionMock);
@@ -135,7 +135,7 @@ public class TransactionDTOImplTest {
         BigDecimal newBalance = balance.subtract(moneyConversion);
 
         CurrencyConversion currencyConversion = createCurrencyConversion(rateChange);
-        Account account = createAccount(accountId, currencyAccount,balance, BigDecimal.ZERO);
+        Account account = createAccount(accountId, currencyAccount,balance);
         Transaction transaction = createTransaction(1L, 1L, moneyToBeTransfer, currencyTransaction, 2L, null);
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(transaction);
 
@@ -143,7 +143,7 @@ public class TransactionDTOImplTest {
         when(accountDTOMock.getAccountToBeUpdate(eq(connectionMock), eq(accountId))).thenReturn(account);
 
         when(currencyConversionDTOMock.getCurrencyConversion(eq(transaction.getCurrency()), eq(account.getCurrency()))).thenReturn(currencyConversion);
-        when(accountDTOMock.updateAccountBalance(eq(connectionMock), eq(accountId),  eq(newBalance), eq(moneyConversion))).thenReturn(account);
+        when(accountDTOMock.updateAccountBalance(eq(connectionMock), eq(accountId),  eq(newBalance))).thenReturn(account);
 
         when(dbUtilMock.executeQueryInTransaction(eq(connectionMock), eq(TransactionDTOImpl.INSERT_TRANSACTION), any(DBUtil.GenerateStatement.class))).thenReturn(resultExecution);
         doNothing().when(connectionMock).commit();
@@ -158,7 +158,7 @@ public class TransactionDTOImplTest {
         verify(dbUtilMock, times(1)).getConnection();
         verify(accountDTOMock, times(1)).getAccountToBeUpdate(eq(connectionMock), eq(accountId));
         verify(currencyConversionDTOMock, times(1)).getCurrencyConversion(eq(transaction.getCurrency()), eq(account.getCurrency()));
-        verify(accountDTOMock, times(1)).updateAccountBalance(eq(connectionMock), eq(accountId), eq(newBalance), eq(moneyConversion));
+        verify(accountDTOMock, times(1)).updateAccountBalance(eq(connectionMock), eq(accountId), eq(newBalance));
         verify(dbUtilMock, times(1)).executeQueryInTransaction(eq(connectionMock), eq(TransactionDTOImpl.INSERT_TRANSACTION), any(DBUtil.GenerateStatement.class));
         verify(connectionMock, times(1)).commit();
         verify(dbUtilMock, times(1)).closeConnection(connectionMock);
@@ -172,7 +172,7 @@ public class TransactionDTOImplTest {
         BigDecimal moneyToBeTransfer = BigDecimal.TEN;
         BigDecimal balance = BigDecimal.ONE;
 
-        Account account = createAccount(accountId, currencyAccount,balance, BigDecimal.ZERO);
+        Account account = createAccount(accountId, currencyAccount,balance);
         Transaction transaction = createTransaction(1L, 1L, moneyToBeTransfer, currencyTransaction, 2L, null);
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(transaction);
 
@@ -201,13 +201,13 @@ public class TransactionDTOImplTest {
         BigDecimal balance = BigDecimal.TEN;
         BigDecimal newBalance = balance.subtract(moneyToBeTransfer);
 
-        Account account = createAccount(accountId, currencyAccount,balance, BigDecimal.ZERO);
+        Account account = createAccount(accountId, currencyAccount,balance);
         Transaction transaction = createTransaction(1L, 1L, moneyToBeTransfer, currencyTransaction, 2L, null);
         DBUtil.ResultExecution<Account> resultExecution = new DBUtil.ResultExecution(transaction);
 
         when(dbUtilMock.getConnection()).thenReturn(connectionMock);
         when(accountDTOMock.getAccountToBeUpdate(eq(connectionMock), eq(accountId))).thenReturn(account);
-        when(accountDTOMock.updateAccountBalance(eq(connectionMock), eq(accountId),  eq(newBalance), eq(moneyToBeTransfer))).thenReturn(account);
+        when(accountDTOMock.updateAccountBalance(eq(connectionMock), eq(accountId),  eq(newBalance))).thenReturn(account);
 
         when(dbUtilMock.executeQueryInTransaction(eq(connectionMock), eq(TransactionDTOImpl.INSERT_TRANSACTION), any(DBUtil.GenerateStatement.class))).thenThrow(ConnectionException.class);
         doNothing().when(connectionMock).rollback();
@@ -221,7 +221,7 @@ public class TransactionDTOImplTest {
         // Check that these mock methods were calling one time
         verify(dbUtilMock, times(1)).getConnection();
         verify(accountDTOMock, times(1)).getAccountToBeUpdate(eq(connectionMock), eq(accountId));
-        verify(accountDTOMock, times(1)).updateAccountBalance(eq(connectionMock), eq(accountId), eq(newBalance), eq(moneyToBeTransfer));
+        verify(accountDTOMock, times(1)).updateAccountBalance(eq(connectionMock), eq(accountId), eq(newBalance));
         verify(dbUtilMock, times(1)).executeQueryInTransaction(eq(connectionMock), eq(TransactionDTOImpl.INSERT_TRANSACTION), any(DBUtil.GenerateStatement.class));
         // Verify that commit was not called but rollback was
         verify(connectionMock, never()).commit();
@@ -241,13 +241,12 @@ public class TransactionDTOImplTest {
         return transaction;
     }
 
-    private Account createAccount(Long id, Currency currency, BigDecimal balance, BigDecimal pendingTransfer){
+    private Account createAccount(Long id, Currency currency, BigDecimal balance){
         Account account = new Account();
         account.setId(id != null ? id : 1L);
         account.setOwner("owner");
         account.setCurrency(currency);
         account.setBalance(balance);
-        account.setPendingTransfer(pendingTransfer);
         return account;
     }
 

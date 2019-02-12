@@ -11,5 +11,5 @@ public interface AccountDTO {
     Account getAccount(Long id);
     Account createAccount(Account account);
     Account getAccountToBeUpdate(Connection con, Long id);
-    Account updateAccountBalance(Connection con, Long accountId, BigDecimal newBalance, BigDecimal pendingTransfer);
+    Account updateAccountBalance(Connection con, Long accountId, BigDecimal newBalance);
 }

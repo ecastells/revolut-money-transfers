@@ -83,7 +83,6 @@ public class AccountControllerTest {
         assertNotNull(accountRetrieved);
         assertEquals(accountCreated.getOwner(), accountRetrieved.getOwner());
         assertEquals(accountCreated.getBalance().toBigInteger(), accountRetrieved.getBalance().toBigInteger());
-        assertEquals(BigDecimal.ZERO.toBigInteger(), accountRetrieved.getPendingTransfer().toBigInteger());
         assertEquals(accountCreated.getCurrency(), accountRetrieved.getCurrency());
 
         // deleting account created

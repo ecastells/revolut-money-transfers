@@ -18,8 +18,7 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
     public static final String GET_ACCOUNTS = "SELECT * FROM account";
     public static final String GET_ACCOUNT_BY_ID = GET_ACCOUNTS + " where id = ?";
     public static final String GET_ACCOUNT_BY_ID_TO_BE_UPDATED = GET_ACCOUNT_BY_ID + " FOR UPDATE";
-    public static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES (?, ?, ?, ?)";
-    public static final String UPDATE_ACCOUNT_BALANCE_PENDING_TRANSFER = "UPDATE account SET balance = ?, pending_transfer = ? where id = ?";
+    public static final String INSERT_ACCOUNT = "INSERT INTO account (owner, balance, currency_id) VALUES (?, ?, ?)";
     public static final String UPDATE_ACCOUNT_BALANCE = "UPDATE account SET balance = ? where id = ?";
 
     @Inject
@@ -43,8 +42,7 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
         return dbUtil.executeQuery(false, INSERT_ACCOUNT, preparedStatement -> {
             preparedStatement.setString(1, account.getOwner());
             preparedStatement.setBigDecimal(2, account.getBalance());
-            preparedStatement.setBigDecimal(3, BigDecimal.ZERO);
-            preparedStatement.setLong(4, account.getCurrency().getId());
+            preparedStatement.setLong(3, account.getCurrency().getId());
             return !insertEntity(account, preparedStatement) ? null : account;
         }).getResult();
     }
@@ -58,19 +56,13 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
     }
 
     @Override
-    public Account updateAccountBalance(Connection con, Long accountId, BigDecimal newBalance, BigDecimal pendingTransfer) {
-        return dbUtil.executeQueryInTransaction(con, pendingTransfer != null ? UPDATE_ACCOUNT_BALANCE_PENDING_TRANSFER : UPDATE_ACCOUNT_BALANCE, preparedStatement -> {
+    public Account updateAccountBalance(Connection con, Long accountId, BigDecimal newBalance) {
+        return dbUtil.executeQueryInTransaction(con, UPDATE_ACCOUNT_BALANCE, preparedStatement -> {
             preparedStatement.setBigDecimal(1, newBalance);
-            if (pendingTransfer != null){
-                preparedStatement.setBigDecimal(2, pendingTransfer);
-                preparedStatement.setLong(3, accountId);
-            } else {
-                preparedStatement.setLong(2, accountId);
-            }
+            preparedStatement.setLong(2, accountId);
             Account account = new Account();
             account.setId(accountId);
             account.setBalance(newBalance);
-            account.setPendingTransfer(pendingTransfer);
             return !updateEntity(account, preparedStatement) ? null : account;
         }).getResult();
     }
@@ -81,7 +73,6 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
         account.setId(rs.getLong("id"));
         account.setOwner(rs.getString("owner"));
         account.setBalance(rs.getBigDecimal("balance"));
-        account.setPendingTransfer(rs.getBigDecimal("pending_transfer"));
         account.setCurrency(Currency.getCurrencyById(rs.getLong("currency_id")));
         return account;
     }

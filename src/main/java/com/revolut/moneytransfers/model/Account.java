@@ -6,7 +6,6 @@ public class Account implements Entity{
     private Long id;
     private String owner;
     private BigDecimal balance;
-    private BigDecimal pendingTransfer;
     private Currency currency;
 
     @Override
@@ -43,21 +42,12 @@ public class Account implements Entity{
         this.currency = currency;
     }
 
-    public BigDecimal getPendingTransfer() {
-        return pendingTransfer;
-    }
-
-    public void setPendingTransfer(BigDecimal pendingTransfer) {
-        this.pendingTransfer = pendingTransfer;
-    }
-
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
                 ", owner='" + owner + '\'' +
                 ", balance=" + balance +
-                ", pendingTransfer=" + pendingTransfer +
                 ", currency=" + currency +
                 '}';
     }

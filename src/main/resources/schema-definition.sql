@@ -21,7 +21,6 @@ CREATE TABLE account (
   id IDENTITY,
   owner VARCHAR(200) NOT NULL,
   balance DECIMAL(19,2) NOT NULL,
-  pending_transfer DECIMAL(19,2),
   currency_id INT NOT NULL,
   FOREIGN KEY(currency_id) REFERENCES currency(id)
 );

@@ -72,7 +72,6 @@ public class AccountDTOImplTest {
         account.setOwner(owner);
         account.setCurrency(Currency.ARG);
         account.setBalance(BigDecimal.ONE);
-        account.setPendingTransfer(BigDecimal.ZERO);
         return account;
     }
 }

@@ -43,7 +43,7 @@ public class DBUtilImplTest {
     public void testInsertGetAndDeleteWithoutTransaction(){
         // insert
         final String owner = "test";
-        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQuery(false, "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
+        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQuery(false, "INSERT INTO account (owner, balance, currency_id) VALUES ('"+owner+"', 0, 1)", preparedStatement -> {
             Account account = new Account();
             int rows = preparedStatement.executeUpdate();
             Long generatedId = null;
@@ -93,7 +93,7 @@ public class DBUtilImplTest {
         final String owner = "test";
         Connection connection = dbUtil.getConnection();
 
-        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQueryInTransaction(connection, "INSERT INTO account (owner, balance, pending_transfer, currency_id) VALUES ('"+owner+"', 0, 0, 1)", preparedStatement -> {
+        DBUtil.ResultExecution<Account> resultInsertion = dbUtil.executeQueryInTransaction(connection, "INSERT INTO account (owner, balance, currency_id) VALUES ('"+owner+"', 0, 1)", preparedStatement -> {
             Account account = new Account();
             int rows = preparedStatement.executeUpdate();
             Long generatedId = null;

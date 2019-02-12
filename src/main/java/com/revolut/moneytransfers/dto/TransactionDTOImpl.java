@@ -68,7 +68,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
         try {
             connection = dbUtil.getConnection();
 
-            // 1- Get the account to be updated
+            // 1- Get the origin account to be updated
             Account fromAccount = accountDTO.getAccountToBeUpdate(connection, transaction.getFromAccountId());
 
             // 2- Generate Currency Conversion
@@ -80,19 +80,14 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
                 moneyToTransfer = currencyConversion != null ?  transaction.getAmount().multiply(currencyConversion.getRateChange()) : BigDecimal.ZERO;
             }
 
-            // TODO not reduce the balance until it is confirmed
             BigDecimal newBalance = fromAccount.getBalance().subtract(moneyToTransfer);
-            // TODO check balance - pending transfer > 0
+
             if (newBalance.compareTo(BigDecimal.ZERO) < 0){
                 throw new ValidationException("The following account does not have enough money");
             }
 
-            if (moneyToTransfer.compareTo(BigDecimal.ZERO) < 0){
-                throw new ConnectionException("There was a problem getting the currency conversion");
-            }
-
             // 3 - Update the current Account
-            accountDTO.updateAccountBalance(connection, fromAccount.getId(), newBalance, moneyToTransfer);
+            accountDTO.updateAccountBalance(connection, fromAccount.getId(), newBalance);
 
             // 4 - Create the transaction
             transactionResponse = createTransaction(connection, transaction);
@@ -136,7 +131,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
             BigDecimal newBalance = toAccount.getBalance().add(moneyToReceive);
 
             // 4 - Update the destination account
-            accountDTO.updateAccountBalance(connection, toAccount.getId(), newBalance, null);
+            accountDTO.updateAccountBalance(connection, toAccount.getId(), newBalance);
 
             // 5 - Update Transaction
             updateTransactionStatus(connection, transaction.getId(), Transaction.TransactionStatus.CONFIRMED);
