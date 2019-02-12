@@ -29,7 +29,7 @@ public class TransactionController extends GenericController {
                 return transactionCreated;
             } else {
                 response.status(405);
-                return new ResponseError("Error creating Transaction");
+                return new ResponseError("Error creating Transaction", ResponseError.ErrorCode.C500);
             }
         }, json());
 
@@ -51,7 +51,7 @@ public class TransactionController extends GenericController {
                 return transactionById;
             } else {
                 response.status(404);
-                return new ResponseError("Transaction not found");
+                return new ResponseError("Transaction not found", ResponseError.ErrorCode.C500);
             }
         }, json());
     }

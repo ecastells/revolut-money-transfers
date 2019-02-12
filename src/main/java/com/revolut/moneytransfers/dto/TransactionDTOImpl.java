@@ -30,6 +30,8 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
     public static final String GET_TRANSACTION_BY_ID_TO_BE_UPDATED = GET_TRANSACTION_BY_ID + " FOR UPDATE";
     public static final String INSERT_TRANSACTION = "INSERT INTO transaction " +
             "(from_account_id, amount, currency_id, to_account_id, status, creation_date) VALUES (?, ?, ?, ?, ?, ?)";
+    public static final String UPDATE_TRANSACTION = "UPDATE transaction SET status = ?, last_update_date = ? WHERE id = ?";
+
 
     @Inject
     public TransactionDTOImpl(DBUtil dbUtil, AccountDTO accountDTO, CurrencyConversionDTO currencyConversionDTO) {
@@ -133,12 +135,13 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
 
             BigDecimal newBalance = toAccount.getBalance().add(moneyToReceive);
 
-            // 4 - Update the current Account
+            // 4 - Update the destination account
             accountDTO.updateAccountBalance(connection, toAccount.getId(), newBalance, null);
 
-            // TODO in success scenario decrease balance and pending for Origin account
+            // 5 - Update Transaction
+            updateTransactionStatus(connection, transaction.getId(), Transaction.TransactionStatus.CONFIRMED);
 
-
+            // TODO in success scenario decrease pending for Origin account
             connection.commit();
 
         } catch (RuntimeException e){
@@ -146,6 +149,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
             throw e;
         } catch (SQLException e) {
             dbUtil.rollback(connection);
+            // TODO mark the transaction as fails and reduce the pending transfer
             throw new ConnectionException(e);
         } finally {
             dbUtil.closeConnection(connection);
@@ -174,6 +178,17 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
         }).getResult();
     }
 
+    protected Transaction updateTransactionStatus(Connection con, Long transactionId, Transaction.TransactionStatus status) {
+        return dbUtil.executeQueryInTransaction(con, UPDATE_TRANSACTION, preparedStatement -> {
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setLong(2, transactionId);
+
+            Transaction transaction = new Transaction();
+            transaction.setId(transactionId);
+            transaction.setStatus(status);
+            return !updateEntity(transaction, preparedStatement) ? null : transaction;
+        }).getResult();
+    }
 
     @Override
     public Transaction fromResultSet(ResultSet rs) throws SQLException {

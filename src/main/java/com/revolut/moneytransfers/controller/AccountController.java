@@ -29,7 +29,7 @@ public class AccountController extends GenericController {
                 return accountCreated;
             } else {
                 response.status(405);
-                return new ResponseError("Error creating Account");
+                return new ResponseError("Error creating Account", ResponseError.ErrorCode.C500);
             }
         }, json());
 
@@ -46,7 +46,7 @@ public class AccountController extends GenericController {
                 return accountById;
             } else {
                 response.status(404);
-                return new ResponseError("Account not found");
+                return new ResponseError("Account not found", ResponseError.ErrorCode.C500);
             }
         }, json());
     }

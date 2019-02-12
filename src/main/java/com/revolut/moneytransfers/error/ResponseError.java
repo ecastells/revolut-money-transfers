@@ -3,20 +3,36 @@ package com.revolut.moneytransfers.error;
 public class ResponseError {
 
     private String errorMessage;
+    private ErrorCode errorCode;
 
-    public ResponseError(String errorMessage, String... args) {
-        this.errorMessage = String.format(errorMessage, (Object) args);
-    }
-
-    public ResponseError(String errorMessage) {
+    public ResponseError(String errorMessage, ErrorCode errorCode) {
         this.errorMessage = errorMessage;
+        this.errorCode = errorCode;
     }
 
-    public ResponseError(Throwable ex) {
+    public ResponseError(Throwable ex, ErrorCode errorCode) {
         this.errorMessage = ex.getMessage();
+        this.errorCode = errorCode;
     }
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
+
+    public enum ErrorCode {
+        C001("Input Parameter Error"),
+        C002("Validation Error"),
+        C003("Database Error"),
+        C500("General Error");
+
+        String detail;
+
+        ErrorCode(String detail) {
+            this.detail = detail;
+        }
     }
 }

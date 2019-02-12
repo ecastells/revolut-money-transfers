@@ -31,11 +31,18 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction createTransaction(Transaction transaction) {
+        // Verify that there are not null for required input parameters
         if (transaction.getFromAccountId() == null || transaction.getToAccountId() == null
             || transaction.getCurrency() == null || transaction.getAmount() == null) {
             throw new ValidationException("fromAccountId, amount, currency, toAccountId must not be null");
         }
 
+        // Verify that FromAccountId is not equal to ToAccountId
+        if (transaction.getFromAccountId().equals(transaction.getToAccountId())){
+            throw new ValidationException("fromAccountId and toAccountId must not be equals");
+        }
+
+        // Verify that the id and money to transfer is greater than zero
         if (transaction.getFromAccountId() < 1 || transaction.getToAccountId() < 1 || transaction.getAmount().compareTo(BigDecimal.ZERO) < 1){
             throw new ValidationException("fromAccountId, amount, toAccountId must be greater than 0");
         }

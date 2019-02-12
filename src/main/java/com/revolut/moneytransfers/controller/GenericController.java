@@ -27,19 +27,23 @@ public abstract class GenericController<T extends GenericController> {
 
         Spark.exception(IllegalArgumentException.class, (error, request, response) -> {
             response.status(400);
-            response.body(toJson(new ResponseError(error)));
-        });
-
-        Spark.exception(ConnectionException.class, (error, request, response) -> {
-            response.status(500);
-            response.body(toJson(new ResponseError(error)));
+            response.body(toJson(new ResponseError(error, ResponseError.ErrorCode.C001)));
         });
 
         Spark.exception(ValidationException.class, (error, request, response) -> {
             response.status(422);
-            response.body(toJson(new ResponseError(error)));
+            response.body(toJson(new ResponseError(error, ResponseError.ErrorCode.C002)));
         });
 
+        Spark.exception(ConnectionException.class, (error, request, response) -> {
+            response.status(500);
+            response.body(toJson(new ResponseError(error, ResponseError.ErrorCode.C003)));
+        });
+
+        Spark.exception(Exception.class, (error, request, response) -> {
+            response.status(500);
+            response.body(toJson(new ResponseError(error, ResponseError.ErrorCode.C500)));
+        });
     }
 
     protected static String toJson(Object object) {
