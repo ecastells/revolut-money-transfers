@@ -5,6 +5,7 @@ import com.revolut.moneytransfers.error.ConnectionException;
 import com.revolut.moneytransfers.error.ResponseError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spark.Service;
 import spark.Spark;
 
 import javax.inject.Singleton;
@@ -14,30 +15,15 @@ import javax.inject.Singleton;
  * dbUser:
  */
 @Singleton
-public class Configuration {
+public class Configuration extends Config{
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
-    private String dbUser;
-    private String dbPass;
-    private String dbName;
-    private int dbPoolSize;
-    private int webPort;
-    private String accountPath;
-    private String transactionPath;
-
-    public Configuration() {
-        this.dbUser = "sa";
-        this.dbPass = "";
-        this.dbName = "MoneyTransfer";
-        this.dbPoolSize = 100;
-        this.webPort = 8080;
-        this.accountPath = "/account";
-        this.transactionPath = "/transaction";
-
-        Spark.port(webPort);
+    public Configuration(int webPort, int threadPool, String dbName) {
+        super(webPort, threadPool, Service.ignite().port(webPort).threadPool(threadPool), "sa", "", dbName, 100);
+        //Spark.port(webPort);
     }
 
-    public String getAccountPath() {
+  /*  public String getAccountPath() {
         return accountPath;
     }
 
@@ -47,6 +33,10 @@ public class Configuration {
 
     public int getWebPort() {
         return webPort;
+    }
+
+    public Service getService() {
+        return service;
     }
 
     public String getDbUser() {
@@ -63,5 +53,5 @@ public class Configuration {
 
     public int getDbPoolSize() {
         return dbPoolSize;
-    }
+    }*/
 }

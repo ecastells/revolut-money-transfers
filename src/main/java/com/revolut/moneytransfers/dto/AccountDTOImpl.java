@@ -43,7 +43,7 @@ public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
         return dbUtil.executeQuery(false, INSERT_ACCOUNT, preparedStatement -> {
             preparedStatement.setString(1, account.getOwner());
             preparedStatement.setBigDecimal(2, account.getBalance());
-            preparedStatement.setBigDecimal(3, account.getPendingTransfer());
+            preparedStatement.setBigDecimal(3, BigDecimal.ZERO);
             preparedStatement.setLong(4, account.getCurrency().getId());
             return !insertEntity(account, preparedStatement) ? null : account;
         }).getResult();

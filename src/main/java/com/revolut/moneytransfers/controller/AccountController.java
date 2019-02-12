@@ -1,6 +1,7 @@
 package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
+import com.revolut.moneytransfers.config.Config;
 import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Account;
@@ -19,10 +20,10 @@ import javax.inject.Singleton;
 public class AccountController extends GenericController {
 
     @Inject
-    public AccountController(Configuration configuration, AccountService accountService) {
+    public AccountController(Config configuration, AccountService accountService) {
         super();
 
-        Spark.post(configuration.getAccountPath(), (request, response) -> {
+        configuration.getService().post(configuration.getAccountPath(), (request, response) -> {
             Account account = new Gson().fromJson(request.body(), Account.class);
             Account accountCreated = accountService.createAccount(account);
             if (accountCreated != null){
@@ -34,12 +35,16 @@ public class AccountController extends GenericController {
             }
         }, json());
 
-        Spark.get(configuration.getAccountPath(), (request, response) -> accountService.getAccounts(), json());
+        configuration.getService().get(configuration.getAccountPath(), (request, response) ->  {
+            response.status(200);
+            return accountService.getAccounts();
+        }, json());
 
-        Spark.get(configuration.getAccountPath() + "/:id", (request, response) ->
+        configuration.getService().get(configuration.getAccountPath() + "/:id", (request, response) ->
         {
             Account accountById = accountService.getAccountById(Long.parseLong(request.params(":id")));
             if (accountById != null){
+                response.status(200);
                 return accountById;
             } else {
                 response.status(404);

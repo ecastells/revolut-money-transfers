@@ -1,5 +1,6 @@
 package com.revolut.moneytransfers.db;
 
+import com.revolut.moneytransfers.config.Config;
 import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ConnectionException;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ public class H2Connection implements DBConnection {
     private static BasicDataSource dataSource = new BasicDataSource();
 
     @Inject
-    public H2Connection(Configuration config) {
+    public H2Connection(Config config) {
             StringBuilder url = new StringBuilder(DB_URL);
             url.append(config.getDbName()).append(";INIT=RUNSCRIPT FROM 'classpath:schema-definition.sql'\\;RUNSCRIPT FROM 'classpath:data-load.sql';TRACE_LEVEL_FILE=4");
             dataSource.setUrl(url.toString());

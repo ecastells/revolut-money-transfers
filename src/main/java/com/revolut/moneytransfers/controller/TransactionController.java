@@ -1,6 +1,7 @@
 package com.revolut.moneytransfers.controller;
 
 import com.google.gson.Gson;
+import com.revolut.moneytransfers.config.Config;
 import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ResponseError;
 import com.revolut.moneytransfers.model.Transaction;
@@ -19,10 +20,10 @@ import javax.inject.Singleton;
 public class TransactionController extends GenericController {
 
     @Inject
-    public TransactionController(Configuration configuration, TransactionService transactionService) {
+    public TransactionController(Config configuration, TransactionService transactionService) {
         super();
 
-        Spark.post(configuration.getTransactionPath(), (request, response) -> {
+        configuration.getService().post(configuration.getTransactionPath(), (request, response) -> {
             Transaction transaction = new Gson().fromJson(request.body(), Transaction.class);
             Transaction transactionCreated = transactionService.createTransaction(transaction);
             if (transactionCreated != null){
@@ -34,12 +35,16 @@ public class TransactionController extends GenericController {
             }
         }, json());
 
-        Spark.get(configuration.getTransactionPath(), (request, response) -> transactionService.getTransactions(), json());
+        configuration.getService().get(configuration.getTransactionPath(), (request, response) -> {
+            response.status(200);
+            return transactionService.getTransactions();
+        }, json());
 
-        Spark.get(configuration.getTransactionPath() + "/:id", (request, response) ->
+        configuration.getService().get(configuration.getTransactionPath() + "/:id", (request, response) ->
         {
             Transaction transactionById = transactionService.getTransactionById(Long.parseLong(request.params(":id")));
             if (transactionById != null){
+                response.status(200);
                 return transactionById;
             } else {
                 response.status(404);

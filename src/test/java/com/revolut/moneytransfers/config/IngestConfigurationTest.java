@@ -11,16 +11,13 @@ import com.revolut.moneytransfers.service.AccountServiceImpl;
 import com.revolut.moneytransfers.service.TransactionService;
 import com.revolut.moneytransfers.service.TransactionServiceImpl;
 
-/**
- * The inject configuration class. Used to inject all bean dependencies at runtime
- */
-public class InjectionConfiguration extends AbstractModule {
+public class IngestConfigurationTest extends AbstractModule {
 
     @Override
     protected void configure() {
         // Ingest general configuration
-        Config configuration = new Configuration(8080, 20, "MoneyTransfer");
-        bind(Config.class).toInstance(configuration);
+        ConfigurationTest configurationTest = new ConfigurationTest(8081, 10, "MoneyTransferTest");
+        bind(Config.class).toInstance(configurationTest);
 
         // Ingest DB connection
         bind(DBConnection.class).to(H2Connection.class);

@@ -1,12 +1,14 @@
-package com.revolut.moneytransfers.db;
+package com.revolut.moneytransfers.integration.db;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.revolut.moneytransfers.config.InjectionConfiguration;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import com.revolut.moneytransfers.config.IngestConfigurationTest;
+import com.revolut.moneytransfers.db.DBUtil;
 import com.revolut.moneytransfers.model.Account;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import java.sql.Connection;
@@ -17,14 +19,14 @@ public class DBUtilImplTest {
 
     @BeforeClass
     public static void initTestData() {
-        Injector injector = Guice.createInjector(new InjectionConfiguration());
+        Injector injector = Guice.createInjector(new IngestConfigurationTest());
         dbUtil = injector.getInstance(DBUtil.class);
     }
 
-    @AfterClass
+  /*  @AfterClass
     public static void finishTestData() {
         dbUtil.destroyConnection();
-    }
+    }*/
 
     @Test
     public void testDBConnection(){
