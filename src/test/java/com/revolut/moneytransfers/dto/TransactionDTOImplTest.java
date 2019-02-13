@@ -1,5 +1,6 @@
 package com.revolut.moneytransfers.dto;
 
+import com.revolut.moneytransfers.config.Config;
 import com.revolut.moneytransfers.db.DBUtil;
 import com.revolut.moneytransfers.error.ConnectionException;
 import com.revolut.moneytransfers.error.ValidationException;
@@ -22,8 +23,10 @@ public class TransactionDTOImplTest {
     DBUtil dbUtilMock;
     Connection connectionMock;
     AccountDTO accountDTOMock;
+    Config configMock;
     CurrencyConversionDTO currencyConversionDTOMock;
     TransactionDTOImpl transactionDTO;
+
 
     @Before
     public void setUp() {
@@ -31,7 +34,8 @@ public class TransactionDTOImplTest {
         connectionMock = mock(Connection.class);
         accountDTOMock = mock(AccountDTO.class);
         currencyConversionDTOMock = mock(CurrencyConversionDTO.class);
-        transactionDTO = new TransactionDTOImpl(dbUtilMock, accountDTOMock, currencyConversionDTOMock);
+        configMock = mock(Config.class);
+        transactionDTO = new TransactionDTOImpl(dbUtilMock, accountDTOMock, currencyConversionDTOMock, configMock);
     }
 
     @Test

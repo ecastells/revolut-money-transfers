@@ -35,6 +35,7 @@ CREATE TABLE transaction (
   status VARCHAR(40) NOT NULL,
   creation_date TIMESTAMP NOT NULL,
   last_update_date TIMESTAMP,
+  retry_creation INT NOT NULL,
   FOREIGN KEY(from_account_id) REFERENCES account(id),
   FOREIGN KEY(to_account_id) REFERENCES account(id),
   FOREIGN KEY(currency_id) REFERENCES currency(id)

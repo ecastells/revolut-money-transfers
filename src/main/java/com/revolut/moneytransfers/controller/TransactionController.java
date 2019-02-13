@@ -17,9 +17,12 @@ import javax.inject.Singleton;
 @Singleton
 public class TransactionController extends GenericController {
 
+    TransactionService transactionService;
+
     @Inject
     public TransactionController(Config configuration, TransactionService transactionService) {
         super();
+        this.transactionService = transactionService;
 
         configuration.getService().post(configuration.getTransactionPath(), (request, response) -> {
             Transaction transaction = new Gson().fromJson(request.body(), Transaction.class);
@@ -54,5 +57,9 @@ public class TransactionController extends GenericController {
                 return new ResponseError("Transaction not found", ResponseError.ErrorCode.C500);
             }
         }, json());
+    }
+
+    public void processTransaction(){
+        transactionService.processTransactions();
     }
 }

@@ -12,6 +12,7 @@ public abstract class Config {
     private int threadPool;
     private String accountPath;
     private String transactionPath;
+    private Integer maxRetryCreation;
 
     public Config(int webPort, int threadPool,  Service service, String dbUser, String dbPass, String dbName, int dbPoolSize) {
         this.webPort = webPort;
@@ -23,6 +24,7 @@ public abstract class Config {
         this.dbPoolSize = dbPoolSize;
         this.accountPath = "/account";
         this.transactionPath = "/transaction";
+        this.maxRetryCreation = 3;
     }
 
     public int getWebPort() {
@@ -59,5 +61,9 @@ public abstract class Config {
 
     public String getTransactionPath() {
         return transactionPath;
+    }
+
+    public Integer getMaxRetryCreation() {
+        return maxRetryCreation;
     }
 }

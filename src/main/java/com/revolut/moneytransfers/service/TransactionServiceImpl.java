@@ -3,6 +3,9 @@ package com.revolut.moneytransfers.service;
 import com.revolut.moneytransfers.dto.TransactionDTO;
 import com.revolut.moneytransfers.error.ValidationException;
 import com.revolut.moneytransfers.model.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.math.BigDecimal;
@@ -10,9 +13,8 @@ import java.util.List;
 
 @Singleton
 public class TransactionServiceImpl implements TransactionService {
-
+    private static final Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
     TransactionDTO transactionDTO;
-
 
     @Inject
     public TransactionServiceImpl(TransactionDTO transactionDTO) {
@@ -48,5 +50,19 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         return transactionDTO.createTransaction(transaction);
+    }
+
+    @Override
+    public void processTransactions() {
+        List<Transaction> transactions = transactionDTO.getTransactions(Transaction.TransactionStatus.PENDING);
+
+        transactions.stream().forEach(transaction -> {
+            try {
+                transactionDTO.processTransaction(transaction.getId());
+            } catch (RuntimeException e){
+                log.error("Getting exception processing the transaction {} {}", transaction, e);
+            }
+
+        });
     }
 }

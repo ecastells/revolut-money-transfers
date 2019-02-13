@@ -12,6 +12,7 @@ public class Transaction implements Entity{
     private TransactionStatus status;
     private Timestamp creationDate;
     private Timestamp lastUpdatedDate;
+    private Integer retryCreation;
 
     @Override
     public Long getId() {
@@ -79,7 +80,30 @@ public class Transaction implements Entity{
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
+    public Integer getRetryCreation() {
+        return retryCreation;
+    }
+
+    public void setRetryCreation(Integer retryCreation) {
+        this.retryCreation = retryCreation;
+    }
+
     public enum TransactionStatus {
         PENDING, CONFIRMED, REJECTED
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", fromAccountId=" + fromAccountId +
+                ", amount=" + amount +
+                ", currency=" + currency +
+                ", toAccountId=" + toAccountId +
+                ", status=" + status +
+                ", creationDate=" + creationDate +
+                ", lastUpdatedDate=" + lastUpdatedDate +
+                ", retryCreation=" + retryCreation +
+                '}';
     }
 }

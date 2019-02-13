@@ -8,4 +8,5 @@ public interface TransactionService {
     Transaction getTransactionById(Long id);
     List<Transaction> getTransactions(Transaction.TransactionStatus status);
     Transaction createTransaction(Transaction transaction);
+    void processTransactions();
 }
