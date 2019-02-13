@@ -12,6 +12,6 @@ import javax.inject.Singleton;
 public class ConfigurationTest extends Config{
 
     public ConfigurationTest(int webPort, int threadPool, String dbName) {
-        super(webPort, threadPool, Service.ignite().port(webPort).threadPool(threadPool), "sa", "", dbName, 100);
+        super(webPort, threadPool, Service.ignite().port(webPort).threadPool(threadPool), "sa", "", dbName, 2);
     }
 }

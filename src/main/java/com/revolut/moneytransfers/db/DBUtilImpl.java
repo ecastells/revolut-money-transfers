@@ -60,11 +60,6 @@ public class DBUtilImpl implements DBUtil {
     }
 
     @Override
-    public void destroyConnection() {
-        this.dbConnection.destroyConnection();
-    }
-
-    @Override
     public void rollback(Connection con){
         if (con != null) {
             try {

@@ -23,11 +23,6 @@ public class DBUtilImplTest {
         dbUtil = injector.getInstance(DBUtil.class);
     }
 
-  /*  @AfterClass
-    public static void finishTestData() {
-        dbUtil.destroyConnection();
-    }*/
-
     @Test
     public void testDBConnection(){
         DBUtil.ResultExecution<ResultSet> resultSetResultExecution = dbUtil.executeQuery(true,"SELECT 1", preparedStatement -> {

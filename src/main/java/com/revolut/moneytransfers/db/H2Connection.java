@@ -1,7 +1,6 @@
 package com.revolut.moneytransfers.db;
 
 import com.revolut.moneytransfers.config.Config;
-import com.revolut.moneytransfers.config.Configuration;
 import com.revolut.moneytransfers.error.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,17 +44,6 @@ public class H2Connection implements DBConnection {
     public Connection getWriteConnection(){
         return getConnection(false);
     }*/
-
-    @Override
-    public void destroyConnection() {
-        if(dataSource != null){
-            try {
-                dataSource.close();
-            } catch (SQLException e) {
-                log.error("Error closing the datasource {}", e);
-            }
-        }
-    }
 
     @Override
     public Connection getConnection(){

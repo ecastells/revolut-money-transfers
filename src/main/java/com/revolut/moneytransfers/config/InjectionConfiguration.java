@@ -19,7 +19,7 @@ public class InjectionConfiguration extends AbstractModule {
     @Override
     protected void configure() {
         // Ingest general configuration
-        Config configuration = new Configuration(8080, 20, "MoneyTransfer");
+        Config configuration = new Configuration(8080, 100, "MoneyTransfer");
         bind(Config.class).toInstance(configuration);
 
         // Ingest DB connection

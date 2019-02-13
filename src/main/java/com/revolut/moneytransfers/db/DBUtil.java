@@ -14,7 +14,6 @@ public interface DBUtil {
     void rollback(Connection con);
     void closeConnection(Connection con);
     void closePreparedStatement(PreparedStatement ps);
-    void destroyConnection();
 
     interface GenerateStatement <T>{
         T initializeStatement (PreparedStatement preparedStatement) throws SQLException;

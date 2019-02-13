@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.revolut.moneytransfers.config.Config;
-import com.revolut.moneytransfers.config.ConfigurationTest;
 import com.revolut.moneytransfers.config.IngestConfigurationTest;
 import com.revolut.moneytransfers.controller.AccountController;
 import com.revolut.moneytransfers.db.DBUtil;
@@ -48,7 +47,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void createNewAccountSuccessfully() {
+    public void testCreateNewAccountSuccessfully() {
         Account account = createAccount("emi", Currency.ARG, BigDecimal.TEN);
         TestResponse res = request("POST", "/account", new Gson().toJson(account));
         Account accountCreated = generateAccount(res.body);
@@ -67,7 +66,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void createAndRetrieveAccountSuccessfully() {
+    public void testCreateAndRetrieveAccountSuccessfully() {
         Account account = createAccount("emi", Currency.ARG, BigDecimal.TEN);
         TestResponse res = request("POST", "/account", new Gson().toJson(account));
         Account accountCreated = generateAccount(res.body);
@@ -90,7 +89,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void createAndRetrieveAccountSuccessfullyFromTheList() {
+    public void testCreateAndRetrieveAccountSuccessfullyFromTheList() {
         Account account = createAccount("emi", Currency.ARG, BigDecimal.TEN);
         TestResponse res = request("POST", "/account", new Gson().toJson(account));
         Account accountCreated = generateAccount(res.body);

@@ -16,7 +16,7 @@ public class IngestConfigurationTest extends AbstractModule {
     @Override
     protected void configure() {
         // Ingest general configuration
-        ConfigurationTest configurationTest = new ConfigurationTest(8081, 10, "MoneyTransferTest");
+        ConfigurationTest configurationTest = new ConfigurationTest(8081, 5, "MoneyTransferTest");
         bind(Config.class).toInstance(configurationTest);
 
         // Ingest DB connection
