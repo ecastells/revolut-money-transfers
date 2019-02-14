@@ -20,7 +20,7 @@ public class H2Connection implements DBConnection {
     @Inject
     public H2Connection(Config config) {
             StringBuilder url = new StringBuilder(DB_URL);
-            url.append(config.getDbName()).append(";INIT=RUNSCRIPT FROM 'classpath:schema-definition.sql'\\;RUNSCRIPT FROM 'classpath:data-load.sql';TRACE_LEVEL_FILE=4");
+            url.append(config.getDbName()).append(";INIT=RUNSCRIPT FROM 'classpath:schema-definition.sql'\\;RUNSCRIPT FROM 'classpath:data-load.sql';MVCC=TRUE;LOCK_TIMEOUT=30000");
             dataSource.setUrl(url.toString());
             dataSource.setUsername(config.getDbUser());
             dataSource.setPassword(config.getDbPass());
@@ -33,6 +33,7 @@ public class H2Connection implements DBConnection {
             dataSource.setFastFailValidation(true);
             dataSource.setDefaultTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             dataSource.setTimeBetweenEvictionRunsMillis(30000);
+
     }
 
 /*    @Override
