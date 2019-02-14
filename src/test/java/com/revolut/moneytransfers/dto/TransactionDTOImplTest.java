@@ -307,10 +307,9 @@ public class TransactionDTOImplTest {
         transactionDTO.processTransaction(transaction.getId());
     }
 
-
     private Transaction createTransaction(Long id, Long fromAccountId, BigDecimal amount, Currency currency, Long toAccountId, Transaction.TransactionStatus status, int retryCount){
         Transaction transaction = new Transaction();
-        transaction.setToAccountId(id != null ? id : 1L);
+        transaction.setId(id != null ? id : 1L);
         transaction.setFromAccountId(fromAccountId);
         transaction.setAmount(amount);
         transaction.setCurrency(currency);

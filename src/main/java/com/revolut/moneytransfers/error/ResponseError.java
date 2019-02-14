@@ -15,13 +15,13 @@ public class ResponseError {
         this.errorCode = errorCode;
     }
 
-    public String getErrorMessage() {
+  /*  public String getErrorMessage() {
         return errorMessage;
     }
 
     public ErrorCode getErrorCode() {
         return errorCode;
-    }
+    }*/
 
     public enum ErrorCode {
         C001("Input Parameter Error"),

@@ -206,6 +206,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
     protected Transaction createTransaction(Connection con, Transaction transaction) {
         transaction.setStatus(Transaction.TransactionStatus.PENDING);
         transaction.setCreationDate(Timestamp.from(Instant.now()));
+        transaction.setRetryCreation(0);
 
         return dbUtil.executeQueryInTransaction(con, INSERT_TRANSACTION, preparedStatement -> {
             preparedStatement.setLong(1, transaction.getFromAccountId());
@@ -214,7 +215,7 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
             preparedStatement.setLong(4, transaction.getToAccountId());
             preparedStatement.setString(5, transaction.getStatus().name());
             preparedStatement.setTimestamp(6, transaction.getCreationDate());
-            preparedStatement.setInt(7, 0);
+            preparedStatement.setInt(7, transaction.getRetryCreation());
             return !insertEntity(transaction, preparedStatement) ? null : transaction;
         }).getResult();
     }
