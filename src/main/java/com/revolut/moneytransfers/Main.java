@@ -18,6 +18,6 @@ public class Main {
         // Execute a process every 10 seconds to confirm the transaction
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(transactionController::processTransaction,
-                5, 5, TimeUnit.SECONDS);
+                5, 10, TimeUnit.SECONDS);
     }
 }

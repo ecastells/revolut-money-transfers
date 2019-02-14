@@ -25,8 +25,12 @@ public enum Currency implements Entity{
         return id;
     }
 
+
+    /**
+     * This method should not be used in an Enum
+     */
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long id){
+        throw new UnsupportedOperationException();
     }
 }

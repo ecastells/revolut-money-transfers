@@ -179,8 +179,8 @@
           </collectionProp>
         </Arguments>
         <hashTree/>
-        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable" enabled="true">
-          <stringProp name="maximumValue">50</stringProp>
+        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable - From 1 to 5" enabled="true">
+          <stringProp name="maximumValue">5</stringProp>
           <stringProp name="minimumValue">1</stringProp>
           <stringProp name="outputFormat"></stringProp>
           <boolProp name="perThread">false</boolProp>
@@ -188,11 +188,11 @@
           <stringProp name="variableName">random1</stringProp>
         </RandomVariableConfig>
         <hashTree/>
-        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable" enabled="true">
+        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable - From 6 to 10" enabled="true">
           <stringProp name="variableName">random2</stringProp>
           <stringProp name="outputFormat"></stringProp>
-          <stringProp name="minimumValue">51</stringProp>
-          <stringProp name="maximumValue">100</stringProp>
+          <stringProp name="minimumValue">6</stringProp>
+          <stringProp name="maximumValue">10</stringProp>
           <stringProp name="randomSeed"></stringProp>
           <boolProp name="perThread">false</boolProp>
         </RandomVariableConfig>
