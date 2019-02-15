@@ -9,8 +9,8 @@ Backend test for money transfers between accounts.
 ## About the Project
 - This is an implementation a RESTful API for money transfers between accounts.
 - Uses two kind of entities: Account and Transaction
-- It creates the transaction and process them by jobs in order to give a quickly response.
-- In order to ensure that the entity is not modified until it is update a lock with a write (exclusive) is used until the transaction is completed by select ... for update
+- It creates the transaction and processes them by jobs in order to give a quickly response.
+- In order to ensure that the entity is not modified until it is updated a lock with a write (exclusive) is used until the transaction is completed by select ... for update
 
 ### Programming Languages and Frameworks used
 - Java 8
@@ -133,12 +133,12 @@ The successfully response returns the list of accounts:
 
  
 ### Transaction
-The transaction entity contains the origin and destination account and the mount in the specified currency as principal attributes.
-The transaction is created but not processed immediately in order to give a quick response to the client.
+The transaction entity contains the origin and destination account and the amount in the specified currency as principal attributes.
+The transaction is created but not processed immediately in order to give a quickly response to the client.
 A transaction can be created when the origin account has more money than the specified in the transaction object.
-The quick response of the transaction created returns PENDING as status, but the money is not transfering to the destination yet, until this will be processed.
-When the transaction is processed, if it is OK, the money is transferred to the destination and the status is CONFIRMED.
-Otherwise it is going to try a specific number of retry and if it reach the limit, the money is returned to the origin and the transaction is marked as REJECTED
+The response of the transaction created returns PENDING as status, but the money is not transfering to the destination yet, until this will be processed.
+When the transaction is processed, and if this is OK, the money is transferred to the destination and the status is CONFIRMED.
+Otherwise it is going to try a specific number of retry and if it reach the limit, the money is returned to the origin account and the transaction is marked as REJECTED
     
      {
          "id": <long>,
@@ -186,7 +186,7 @@ And example of failure response contains:
          "errorCode": "C002"
      }
      
-#### Retrieve an Account
+#### Retrieve an Transaction
  
 The following request retrieves an transaction by his `ID`:
  
@@ -217,7 +217,7 @@ And example of failure response contains:
      
 #### Retrieve a list of Transactions
  
-The following request retrieves a list of account:
+The following request retrieves a list of transactions:
  
      GET /transaction?status=<status>
  
