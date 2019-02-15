@@ -1,7 +1,7 @@
 package com.revolut.moneytransfers.model;
 
 public enum Currency implements Entity{
-    ARG(1L), EUR(2L), USD(3L);
+    ARG(1L), EUR(2L), USD(3L), GBP(4L);
 
     private Long id;
 
