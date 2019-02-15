@@ -1,5 +1,8 @@
 package com.revolut.moneytransfers.error;
 
+/**
+ * Entity class that represent an error response.
+ */
 public class ResponseError {
 
     private String errorMessage;

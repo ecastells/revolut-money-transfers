@@ -2,6 +2,9 @@ package com.revolut.moneytransfers.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Entity class that represent a Currency Conversion between different currencies types.
+ */
 public class CurrencyConversion implements Entity{
     private Long id;
     private Currency fromCurrency;

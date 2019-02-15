@@ -11,6 +11,11 @@ import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Implementation Class of the {@link TransactionService} to perform actions for {@link Transaction}
+ *
+ */
+
 @Singleton
 public class TransactionServiceImpl implements TransactionService {
     private static final Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);

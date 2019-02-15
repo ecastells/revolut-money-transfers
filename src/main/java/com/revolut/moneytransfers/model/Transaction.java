@@ -3,6 +3,9 @@ package com.revolut.moneytransfers.model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+/**
+ * Entity class that represent a Transaction.
+ */
 public class Transaction implements Entity{
     private Long id;
     private Long fromAccountId;

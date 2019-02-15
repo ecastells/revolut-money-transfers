@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 /**
  * TransactionController class. Provide operations over RestFul to Retrieve and Create Transactions:
  * - POST /account: Allow to create a Account with a initial balance and kind of currency
- * - GET /account: Allow to retrieve All Accounts created on the System
+ * - GET /account: Allow to retrieve All Accounts created on the Database
  * - GET /account/:id: Allow to retrieve a specific Account according to its id
  */
 @Singleton

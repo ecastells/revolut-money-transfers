@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 import spark.ResponseTransformer;
 import spark.Spark;
 
+/**
+ * GenericController class. Provide functionalities before and after processing a request and response:
+ * - When a request comes, it allows to log it
+ * - Before sending the response, it adds the content type and logs the response
+ * - Catch exception and add message error for that types
+ */
 public abstract class GenericController<T extends GenericController> {
 
     private static final Logger log = LoggerFactory.getLogger(GenericController.class);

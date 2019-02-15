@@ -1,5 +1,8 @@
 package com.revolut.moneytransfers.model;
 
+/**
+ * Entity class that represent a Currency.
+ */
 public enum Currency implements Entity{
     ARG(1L), EUR(2L), USD(3L), GBP(4L);
 

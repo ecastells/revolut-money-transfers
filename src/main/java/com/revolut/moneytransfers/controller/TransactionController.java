@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 /**
  * TransactionController class. Provide operations over RestFul to Retrieve and Create Transactions:
  * - POST /transaction: Allow to create a Transaction for money transfers between accounts. The transaction state is PENDING until it is confirmed
- * - GET /transaction?status=status: Allow to retrieve All Transactions created on the System filter by status. If the parameter is not present the filter is not used
+ * - GET /transaction?status=status: Allow to retrieve All Transactions created on the Database filter by status. If the parameter is not present the filter is not used
  * - GET /transaction/:id: Allow to retrieve a specific Transaction according to its id
  */
 @Singleton

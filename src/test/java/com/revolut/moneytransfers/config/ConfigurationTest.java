@@ -5,9 +5,9 @@ import spark.Service;
 import javax.inject.Singleton;
 
 /**
- * The configuration class for test. All configuration for the application an here.
- * dbUser:
+ * The configuration class. All configurations for test environment are here.
  */
+
 @Singleton
 public class ConfigurationTest extends Config{
 

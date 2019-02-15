@@ -2,17 +2,22 @@ package com.revolut.moneytransfers.config;
 
 import spark.Service;
 
+/**
+ * This Class contains the configuration of the application
+ *
+ */
+// TODO - Read those values from property file
 public abstract class Config {
-    private String dbUser;
-    private String dbPass;
-    private String dbName;
-    private int dbPoolSize;
-    private int webPort;
-    private Service service;
-    private int threadPool;
-    private String accountPath;
-    private String transactionPath;
-    private Integer maxRetryCreation;
+    private String dbUser; // The database user name
+    private String dbPass; // The database password name
+    private String dbName; // The database name
+    private int dbPoolSize; // The database max pool size
+    private int webPort; // The web port of the application
+    private Service service; // The service used for different environment (prod and test)
+    private int threadPool; // the thread pool of the server
+    private String accountPath; // the path of the account operation
+    private String transactionPath; // the path of the transaction operation
+    private Integer maxRetryCreation; // the max number of retry creation
 
     public Config(int webPort, int threadPool,  Service service, String dbUser, String dbPass, String dbName, int dbPoolSize) {
         this.webPort = webPort;

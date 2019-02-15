@@ -8,6 +8,10 @@ import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Implementation Class of the {@link AccountService} to perform actions for {@link Account}
+ *
+ */
 @Singleton
 public class AccountServiceImpl implements AccountService {
 

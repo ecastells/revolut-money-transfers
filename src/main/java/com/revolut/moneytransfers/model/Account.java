@@ -2,6 +2,9 @@ package com.revolut.moneytransfers.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Entity class that represent an Account.
+ */
 public class Account implements Entity{
     private Long id;
     private String owner;

@@ -12,7 +12,7 @@ import com.revolut.moneytransfers.service.TransactionService;
 import com.revolut.moneytransfers.service.TransactionServiceImpl;
 
 /**
- * The inject configuration class. Used to inject all bean dependencies at runtime
+ * The inject configuration class. Used to inject all bean dependencies at runtime in Prod envirotment
  */
 public class InjectionConfiguration extends AbstractModule {
 

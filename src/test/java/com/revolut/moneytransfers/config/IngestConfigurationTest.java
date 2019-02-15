@@ -11,6 +11,9 @@ import com.revolut.moneytransfers.service.AccountServiceImpl;
 import com.revolut.moneytransfers.service.TransactionService;
 import com.revolut.moneytransfers.service.TransactionServiceImpl;
 
+/**
+ * The inject configuration class. Used to inject all bean dependencies at runtime in Test envirotment
+ */
 public class IngestConfigurationTest extends AbstractModule {
 
     @Override

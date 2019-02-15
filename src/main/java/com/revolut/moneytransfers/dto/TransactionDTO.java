@@ -16,6 +16,7 @@ public interface TransactionDTO {
 
     /**
      * Returns the {@link List<Transaction>} from the database
+     *
      * @param status the status of the transaction, if it is null all transactions should be returned
      * @return the list of Transactions
      *
