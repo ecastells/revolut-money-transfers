@@ -11,6 +11,7 @@ Backend test for money transfers between accounts.
 - Uses two kind of entities: Account and Transaction
 - It creates the transaction and processes them by jobs in order to give a quickly response.
 - In order to ensure that the entity is not modified until it is updated a lock with a write (exclusive) is used until the transaction is completed by select ... for update
+- In order to simulate a numbers of executions in parallel, the JMeter tool was used. The configuration test plan can find over /util/MoneyTransfers.jmx
 
 ### Programming Languages and Frameworks used
 - Java 8
