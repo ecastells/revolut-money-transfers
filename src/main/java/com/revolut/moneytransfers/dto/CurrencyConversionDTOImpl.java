@@ -8,6 +8,11 @@ import javax.inject.Singleton;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementation Class of the {@link CurrencyConversionDTO} to perform actions over the database for {@link CurrencyConversion}
+ *
+ */
+
 @Singleton
 public class CurrencyConversionDTOImpl implements CurrencyConversionDTO, GenericDTO<CurrencyConversion>{
 

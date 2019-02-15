@@ -11,6 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Implementation Class of the {@link AccountDTO} to perform actions over the database for {@link Account}
+ *
+ */
 @Singleton
 public class AccountDTOImpl implements AccountDTO, GenericDTO<Account>{
 

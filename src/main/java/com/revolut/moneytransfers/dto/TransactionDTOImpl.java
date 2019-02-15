@@ -21,6 +21,11 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * Implementation Class of the {@link TransactionDTO} to perform actions over the database for {@link Transaction}
+ *
+ */
+
 @Singleton
 public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transaction> {
     private static final Logger log = LoggerFactory.getLogger(TransactionDTOImpl.class);
@@ -82,14 +87,15 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
 
             BigDecimal newBalance = fromAccount.getBalance().subtract(moneyToTransfer);
 
+            // 3 - Verify that the origin account has enough money before creating the transaction
             if (newBalance.compareTo(BigDecimal.ZERO) < 0){
                 throw new ValidationException("The following account does not have enough money");
             }
 
-            // 3 - Update the current Account
+            // 4 - Update the current Account
             accountDTO.updateAccountBalance(connection, fromAccount.getId(), newBalance);
 
-            // 4 - Create the transaction
+            // 5 - Create the transaction
             transactionResponse = createTransaction(connection, transaction);
 
             connection.commit();
@@ -166,13 +172,14 @@ public class TransactionDTOImpl implements TransactionDTO, GenericDTO<Transactio
                 // 3B - Generate Currency Conversion
                 BigDecimal moneyToReturn = getMoneyConversion(transaction, fromAccount);
 
-                // 4 - Return the money to origin account
+                // 4B - Return the money to origin account
                 BigDecimal newBalance = fromAccount.getBalance().add(moneyToReturn);
                 accountDTO.updateAccountBalance(connection, fromAccount.getId(), newBalance);
 
                 status = Transaction.TransactionStatus.REJECTED;
             }
 
+            // 5 - Update the retryCreation and status of the transaction
             updateTransaction(connection, transaction.getId(), ++retryCreation, status);
 
             connection.commit();

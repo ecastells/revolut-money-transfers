@@ -7,6 +7,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.*;
 
+/**
+ * Implementation Class of the utility to perform some actions over the database
+ *
+ */
 @Singleton
 public class DBUtilImpl implements DBUtil {
 

@@ -10,12 +10,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+/**
+ * Implementation Class of the H2 Database connection. The DbName, DbUser, DbPass and DbPoolSize can be configured in order to
+ * be different for each environment
+ *
+ */
 @Singleton
 public class H2Connection implements DBConnection {
     private static final Logger log = LoggerFactory.getLogger(H2Connection.class);
     private static final String JDBC_DRIVER = "org.h2.Driver";
     private static final String DB_URL = "jdbc:h2:mem:";
     private static BasicDataSource dataSource = new BasicDataSource();
+
     @Inject
     public H2Connection(Config config) {
             StringBuilder url = new StringBuilder(DB_URL + config.getDbName());
@@ -23,7 +29,6 @@ public class H2Connection implements DBConnection {
             dataSource.setUrl(url.toString());
             dataSource.setUsername(config.getDbUser());
             dataSource.setPassword(config.getDbPass());
-            //Set the connection pool size
             dataSource.setInitialSize(config.getDbPoolSize());
             dataSource.setMaxTotal(config.getDbPoolSize());
             dataSource.setMaxIdle(config.getDbPoolSize());
